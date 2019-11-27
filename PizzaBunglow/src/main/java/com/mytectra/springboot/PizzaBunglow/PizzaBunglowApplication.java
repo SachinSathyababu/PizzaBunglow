@@ -8,7 +8,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import com.mytectra.springboot.PizzaBunglow.PizzaKitchen.PizzaKitchenService;
+import com.mytectra.springboot.PizzaBunglow.Store.AddOnStore;
 import com.mytectra.springboot.PizzaBunglow.Store.PizzaStore;
+import com.mytectra.springboot.PizzaBunglow.model.AddOns;
+import com.mytectra.springboot.PizzaBunglow.model.AddOnsRequest;
 import com.mytectra.springboot.PizzaBunglow.model.OrderItem;
 import com.mytectra.springboot.PizzaBunglow.model.Pizza;
 import com.mytectra.springboot.PizzaBunglow.model.PizzaOrder;
@@ -59,14 +62,62 @@ public class PizzaBunglowApplication {
 		PizzaRequests requests= new PizzaRequests();
 		requests.setPizzaRequests(requestList);
 		
+		AddOns addOns1= new AddOns();
+		addOns1.setName("Coke");
+		addOns1.setDescription("Cool drinks");
+		addOns1.setCost(30);
+		
+		AddOns addOns2= new AddOns();
+		addOns2.setName("Fries");
+		addOns2.setDescription("French Fries");
+		addOns2.setCost(50);
+		
+		AddOns addOns3= new AddOns();
+		addOns3.setName("Chicken Burger");
+		addOns3.setDescription("Burger with Chicken");
+		addOns3.setCost(60);
+		
+		AddOnStore addOnstore= ctx.getBean(AddOnStore.class);
+		addOnstore.addAddOns(addOns1);
+		addOnstore.addAddOns(addOns2);
+		addOnstore.addAddOns(addOns3);
+		
+		AddOnsRequest addOnsRequest= new AddOnsRequest();
+		addOnsRequest.setName("Coke");
+		addOnsRequest.setCount(3);
+		
+		
+		
+		AddOnsRequest addOnsRequest1= new AddOnsRequest();
+		addOnsRequest1.setName("Fries");
+		addOnsRequest1.setCount(2);
+		
+		
+		
+		AddOnsRequest addOnsRequest2= new AddOnsRequest();
+		addOnsRequest2.setName("Chicken Burger");
+		addOnsRequest2.setCount(3);
+		
+		
+		List<AddOnsRequest> AddOnsList= new ArrayList<AddOnsRequest>();
+		AddOnsList.add(addOnsRequest);
+		AddOnsList.add(addOnsRequest1);
+		AddOnsList.add(addOnsRequest2);
+		
 		PizzaOrder recipt;
 		try {
-			recipt = pizzaKit.Order(requests);
+			recipt = pizzaKit.Order(requests, AddOnsList);
 			
 			System.out.println("OrderId is "+recipt.getOrderId());
 			System.out.println("Order Contents is");
-			for(OrderItem OT: recipt.getPizzas()) {
+			for(OrderItem OT: recipt.getOrderItem()) {
+				if(OT.getPizza()!=null) {
 				System.out.println(OT.getPizza().getName()+"-"+OT.getCount());
+				}
+				
+				if(OT.getAddOns()!=null) {
+					System.out.println(OT.getAddOns().getName()+"-"+OT.getCount());
+				}
 			}
 			System.out.println("Order Status is "+recipt.getStatus());
 			System.out.println("Order Cost Price  "+recipt.getPrice().getCostPrice());

@@ -16,8 +16,18 @@ public class BuyOneGetOneDiscount implements Discount{
 	public double discount(PizzaOrder order) {
 		// TODO Auto-generated method stub
 		
-		for(OrderItem item: order.getPizzas()) {
-			if(item.getPizza().getName().equalsIgnoreCase("Panner Pizza")) {
+		for(OrderItem item: order.getOrderItem()) {
+			if(item.getPizza()!=null && item.getPizza().getName().equalsIgnoreCase("Panner Pizza")) 
+			{
+				
+				int count= item.getCount();
+				for(int i=1; i<=count;i++) {
+				item.setCount(item.getCount()+1);
+				}
+			}
+			
+			if(item.getAddOns()!=null && item.getAddOns().getName().equalsIgnoreCase("Fries")) 
+			{
 				
 				int count= item.getCount();
 				for(int i=1; i<=count;i++) {

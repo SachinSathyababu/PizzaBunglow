@@ -1,10 +1,13 @@
 package com.mytectra.springboot.PizzaBunglow.Baker;
 
+import java.util.List;
+
+import com.mytectra.springboot.PizzaBunglow.model.AddOnsRequest;
 import com.mytectra.springboot.PizzaBunglow.model.PizzaOrder;
 import com.mytectra.springboot.PizzaBunglow.model.PizzaRequests;
 
 public interface Baker {
 	
-	public PizzaOrder bake(PizzaRequests pizzaRequests) throws PizzaBakeException;
+	public PizzaOrder bake(PizzaRequests pizzaRequests, List<AddOnsRequest> addOnsList) throws PizzaBakeException;
 
 }

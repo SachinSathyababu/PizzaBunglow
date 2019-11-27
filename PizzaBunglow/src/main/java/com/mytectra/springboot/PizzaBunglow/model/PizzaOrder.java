@@ -7,7 +7,7 @@ public class PizzaOrder {
 	
 	private int orderId;
 	
-	private List<OrderItem> pizzas = new ArrayList<>();
+	private List<OrderItem> orderItem = new ArrayList<OrderItem>();
 	
 	public enum Status { CANCELED, PROCESSING, DELIVERED };
 	
@@ -36,13 +36,12 @@ public class PizzaOrder {
 		this.orderId = orderId;
 	}
 
-
-	public List<OrderItem> getPizzas() {
-		return pizzas;
+	public List<OrderItem> getOrderItem() {
+		return orderItem;
 	}
 
-	public void setPizzas(List<OrderItem> pizzas) {
-		this.pizzas = pizzas;
+	public void setOrderItem(List<OrderItem> orderItem) {
+		this.orderItem = orderItem;
 	}
 
 	public Status getStatus() {
@@ -62,7 +61,7 @@ public class PizzaOrder {
 	}
 
 	public void addOrder(OrderItem order) {
-		pizzas.add(order);
+		orderItem.add(order);
 	}
 
 	

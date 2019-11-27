@@ -1,11 +1,15 @@
 package com.mytectra.springboot.PizzaBunglow.Baker;
 
+import java.util.List;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.mytectra.springboot.PizzaBunglow.Store.AddOnStore;
 import com.mytectra.springboot.PizzaBunglow.Store.PizzaStore;
+import com.mytectra.springboot.PizzaBunglow.model.AddOns;
+import com.mytectra.springboot.PizzaBunglow.model.AddOnsRequest;
 import com.mytectra.springboot.PizzaBunglow.model.OrderItem;
 import com.mytectra.springboot.PizzaBunglow.model.Pizza;
 import com.mytectra.springboot.PizzaBunglow.model.PizzaOrder;
@@ -19,9 +23,12 @@ public class BakerService implements Baker{
 	@Autowired
 	private PizzaStore pizzaStore;
 	
+	@Autowired
+	private AddOnStore addOnStore;
+	
 	
 	@Override
-	public PizzaOrder bake(PizzaRequests pizzaRequests) throws PizzaBakeException {
+	public PizzaOrder bake(PizzaRequests pizzaRequests, List<AddOnsRequest> addOnsList) throws PizzaBakeException {
 		PizzaOrder order = new PizzaOrder();
 		order.setOrderId(new Random().nextInt());
 		for(PizzaRequest request : pizzaRequests.getPizzaRequests() ) {
@@ -32,6 +39,17 @@ public class BakerService implements Baker{
 				throw new PizzaBakeException("Sorry we cannot deliver - "+ request.getPizzaName() + " we dont have it right now" );
 			}
 		}
+		
+		for(AddOnsRequest request : addOnsList ) {
+			AddOns addOns = addOnStore.getAddOnsByName(request.getName());
+			if(addOns != null) {
+			order.addOrder(new OrderItem(addOns, request.getCount()));
+			} else {
+				throw new PizzaBakeException("Sorry we cannot deliver - "+ request.getName() + " we dont have it right now" );
+			}
+		}
+		
+		
 		order.setStatus(Status.PROCESSING);
 		order.setMessage("Thank You!");
 		return order;

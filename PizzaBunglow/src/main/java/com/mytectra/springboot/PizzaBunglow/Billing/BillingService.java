@@ -14,19 +14,31 @@ import com.mytectra.springboot.PizzaBunglow.model.Price;
 @Component
 public class BillingService implements Billing{
 
-	@Value("${pizza.tax}")
-	private int tax;
+	//@Value("${pizza.tax}")
+	private int tax = 18;
 	
 	@Autowired
 	private List<Discount> discounts;
+	
+	
+	/*public void setDiscounts(List<Discount> discounts) {
+		this.discounts = discounts;
+	}*/
 	
 	@Override
 	public void bill(PizzaOrder order) {
 		Price price= new Price();
 		order.setPrice(price);
 		double totalPrice = 0;
-		for(OrderItem item : order.getPizzas()) {
+		for(OrderItem item : order.getOrderItem()) {
+			
+			if(item.getPizza()!=null) {
 			totalPrice += (item.getPizza().getCost() * item.getCount());
+			}
+			
+			if(item.getAddOns()!=null) {
+				totalPrice += (item.getAddOns().getCost() * item.getCount());
+			}
 		}
 		price.setCostPrice(totalPrice);
 		double discount = 0;

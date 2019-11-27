@@ -6,8 +6,17 @@ public class OrderItem {
 	 
 	private int count;
 
+	private AddOns addOns;
 	
+	public OrderItem() {
+	}
 	
+	public OrderItem(AddOns addOns,int count) {
+		super();
+		this.count = count;
+		this.addOns = addOns;
+	}
+
 	public OrderItem(Pizza pizza, int count) {
 		super();
 		this.pizza = pizza;
@@ -28,6 +37,14 @@ public class OrderItem {
 
 	public void setCount(int count) {
 		this.count = count;
+	}
+
+	public AddOns getAddOns() {
+		return addOns;
+	}
+
+	public void setAddOns(AddOns addOns) {
+		this.addOns = addOns;
 	}
 	
 	
