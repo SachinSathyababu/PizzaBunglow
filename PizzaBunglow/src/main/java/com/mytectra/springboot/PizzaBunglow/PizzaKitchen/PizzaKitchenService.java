@@ -28,11 +28,13 @@ public class PizzaKitchenService implements PizzaKitchen{
 		PizzaOrder order= new PizzaOrder();
 		try {
 			order = bakerService.bake(pizzaRequests, addOnsList);
+			billingService.bill(order);
 		} catch (PizzaBakeException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return null;
 		}
-		billingService.bill(order);
+		
 		return order;
 	}
 
