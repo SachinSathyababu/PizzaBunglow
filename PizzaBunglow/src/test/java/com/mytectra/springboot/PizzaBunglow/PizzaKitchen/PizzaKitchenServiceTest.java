@@ -11,10 +11,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.mytectra.springboot.PizzaBunglow.Baker.Baker;
 import com.mytectra.springboot.PizzaBunglow.Baker.PizzaBakeException;
 import com.mytectra.springboot.PizzaBunglow.Billing.Billing;
+import com.mytectra.springboot.PizzaBunglow.config.TestConfig3;
 import com.mytectra.springboot.PizzaBunglow.model.AddOns;
 import com.mytectra.springboot.PizzaBunglow.model.AddOnsRequest;
 import com.mytectra.springboot.PizzaBunglow.model.OrderItem;
@@ -27,16 +33,19 @@ import com.mytectra.springboot.PizzaBunglow.model.Price;
 import com.mytectra.springboot.PizzaBunglow.model.PizzaRequest.Base;
 import com.mytectra.springboot.PizzaBunglow.model.PizzaRequest.Size;
 
-@ExtendWith(MockitoExtension.class)
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes= {TestConfig3.class, PizzaKitchenServiceTest.class})
+@Configuration
+@ComponentScan(basePackages = "com.mytectra.springboot.PizzaBunglow.PizzaKitchen")
 public class PizzaKitchenServiceTest {
 
-	@Mock
+	@Autowired
 	private Billing biller;
 	
-	@Mock
+	@Autowired
 	private Baker baker;
 	
-	@InjectMocks
+	@Autowired
 	private PizzaKitchenService kitchen;
 	
 	@Test

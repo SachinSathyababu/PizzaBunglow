@@ -6,19 +6,24 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.mytectra.springboot.PizzaBunglow.Store.AddOnStore;
 import com.mytectra.springboot.PizzaBunglow.Store.PizzaStore;
+import com.mytectra.springboot.PizzaBunglow.config.TestConfig2;
 import com.mytectra.springboot.PizzaBunglow.model.AddOns;
 import com.mytectra.springboot.PizzaBunglow.model.AddOnsRequest;
-import com.mytectra.springboot.PizzaBunglow.model.OrderItem;
 import com.mytectra.springboot.PizzaBunglow.model.Pizza;
 import com.mytectra.springboot.PizzaBunglow.model.PizzaOrder;
 import com.mytectra.springboot.PizzaBunglow.model.PizzaRequest;
@@ -26,21 +31,29 @@ import com.mytectra.springboot.PizzaBunglow.model.PizzaRequest.Base;
 import com.mytectra.springboot.PizzaBunglow.model.PizzaRequest.Size;
 import com.mytectra.springboot.PizzaBunglow.model.PizzaRequests;
 
-@ExtendWith(MockitoExtension.class)
+@ExtendWith({SpringExtension.class})
+@ContextConfiguration(classes= {TestConfig2.class, BakerServiceTest.class})
+@Configuration
+@ComponentScan(basePackages = "com.mytectra.springboot.PizzaBunglow.Baker")
 public class BakerServiceTest {
 	
 		
-	@Mock
+	@Autowired
 	private PizzaStore pStore;
 	
-	@Mock
+	@Autowired
 	private AddOnStore aStore;
 	
-	@InjectMocks
+	@Autowired
 	private BakerService baker;
 	
+	@AfterEach
+	public void resetMocks() {
+		Mockito.reset(pStore,aStore);
+	}
+	
 	@Test
-	public void test_baker() {
+	public void test_baker() throws PizzaBakeException {
 		
 		Pizza pizza= new Pizza(1, "Chicken Pizza", "Chicken Pizza with Spicy", 350);
 		AddOns addOns= new AddOns(1, "Chicken Burger", "Chicken Burger with Spicy", 350);
@@ -68,12 +81,7 @@ public class BakerServiceTest {
 		arequests.add(addRequest);
 		
 		PizzaOrder order= new PizzaOrder();
-		try {
 		 order=	baker.bake(requests, arequests);
-		} catch (PizzaBakeException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		
 		
 		
@@ -99,7 +107,7 @@ public class BakerServiceTest {
 		addRequest.setName("Chicken Burger");
 		
 		
-		Mockito.lenient().when(aStore.getAddOnsByName(addRequest.getName())).thenReturn(addOns);
+		Mockito.when(aStore.getAddOnsByName(addRequest.getName())).thenReturn(addOns);
 		
 		PizzaRequests requests= new PizzaRequests();
 		List<PizzaRequest> prequests= new ArrayList<PizzaRequest>();
@@ -129,7 +137,7 @@ public class BakerServiceTest {
 		addRequest.setCount(3);
 		addRequest.setName("Chicken Burger");
 		
-		Mockito.lenient().when(pStore.getPizzaByName(pizzaRequest.getPizzaName())).thenReturn(pizza);
+		Mockito.when(pStore.getPizzaByName(pizzaRequest.getPizzaName())).thenReturn(pizza);
 			
 		PizzaRequests requests= new PizzaRequests();
 		List<PizzaRequest> prequests= new ArrayList<PizzaRequest>();

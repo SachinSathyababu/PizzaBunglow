@@ -15,10 +15,10 @@ public class PizzaStoreImpl implements PizzaStore{
 	@Override
 	public void addPizza(Pizza pizza) {
 		
-		if(pizza!=null && 
+		if(pizza!=null /*&& 
 				pizza.getName()!=null && !pizza.getName().trim().isEmpty() &&
 				pizza.getId()!=0 && pizza.getCost()!=0 && 
-				pizza.getDescription()!=null && !pizza.getDescription().trim().isEmpty()){
+				pizza.getDescription()!=null && !pizza.getDescription().trim().isEmpty()*/){
 		pizzas.add(pizza);
 	}
 	}

@@ -30,11 +30,13 @@ public class PizzaBunglowApplication {
 		 PizzaStore pizzaStore = ctx.getBean(PizzaStore.class);
 
 		Pizza pizza= new Pizza();
+		pizza.setId(1);
 		pizza.setName("Panner Pizza");
 		pizza.setCost(300);
 		pizza.setDescription("topped with panner");
 		
 		Pizza pizza1= new Pizza();
+		pizza1.setId(2);
 		pizza1.setName("Chicken Pizza");
 		pizza1.setCost(450);
 		pizza1.setDescription("topped with chicken");
@@ -42,8 +44,30 @@ public class PizzaBunglowApplication {
 		pizzaStore.addPizza(pizza);
 		pizzaStore.addPizza(pizza1);
 		
+		AddOns addOns1= new AddOns();
+		addOns1.setId(1);
+		addOns1.setName("Coke");
+		addOns1.setDescription("Cool drinks");
+		addOns1.setCost(30);
 		
-		PizzaRequest pizzaRequest = new PizzaRequest();
+		AddOns addOns2= new AddOns();
+		addOns2.setId(2);
+		addOns2.setName("Fries");
+		addOns2.setDescription("French Fries");
+		addOns2.setCost(50);
+		
+		AddOns addOns3= new AddOns();
+		addOns3.setId(3);
+		addOns3.setName("Chicken Burger");
+		addOns3.setDescription("Burger with Chicken");
+		addOns3.setCost(60);
+		
+		AddOnStore addOnstore= ctx.getBean(AddOnStore.class);
+		addOnstore.addAddOns(addOns1);
+		addOnstore.addAddOns(addOns2);
+		addOnstore.addAddOns(addOns3);
+		
+	/*	PizzaRequest pizzaRequest = new PizzaRequest();
 		pizzaRequest.setBase(Base.THIN);
 		pizzaRequest.setPizzaName("Panner Pizza");
 		pizzaRequest.setSize(Size.SMALL);
@@ -124,12 +148,12 @@ public class PizzaBunglowApplication {
 			System.out.println("Order Discount  "+recipt.getPrice().getDiscount());
 			System.out.println("Order Tax in Rs  "+recipt.getPrice().getTax());
 			System.out.println("Order Final Cost "+recipt.getPrice().getFinalPrice());
-			System.out.println(recipt.getMessage());
+			System.out.println(recipt.getMessage());*/
 			
-		} catch (Exception e) {
+		/*} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 		
 		
 		

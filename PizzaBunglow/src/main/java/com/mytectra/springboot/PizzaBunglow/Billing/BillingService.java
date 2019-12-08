@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import com.mytectra.springboot.PizzaBunglow.model.OrderItem;
@@ -12,6 +13,8 @@ import com.mytectra.springboot.PizzaBunglow.model.PizzaOrder;
 import com.mytectra.springboot.PizzaBunglow.model.Price;
 
 @Component
+@ConditionalOnProperty(name="pizza.billing", havingValue="true")
+
 public class BillingService implements Billing{
 
 	//@Value("${pizza.tax}")
