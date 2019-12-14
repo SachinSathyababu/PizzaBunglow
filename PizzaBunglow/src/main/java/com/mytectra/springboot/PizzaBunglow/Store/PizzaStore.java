@@ -11,5 +11,11 @@ public interface PizzaStore {
 	public List<Pizza> getAllPizzas();
 	
 	public Pizza getPizzaByName(String pizzaName);
+	
+	public Pizza getPizzaById(int id);
+	
+	public void updatePizza(Pizza pizza);
+	
+	public void deletePizza(int id);
 
 }

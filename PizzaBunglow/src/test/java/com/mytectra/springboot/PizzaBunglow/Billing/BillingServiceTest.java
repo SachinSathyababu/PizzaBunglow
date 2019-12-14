@@ -28,7 +28,7 @@ import com.mytectra.springboot.PizzaBunglow.model.PizzaOrder;
 public class BillingServiceTest {
 	
 	@Autowired
-	private BillingService billingService;
+	private Billing billingService;
 	
 	@Autowired
 	private Discount disc1;

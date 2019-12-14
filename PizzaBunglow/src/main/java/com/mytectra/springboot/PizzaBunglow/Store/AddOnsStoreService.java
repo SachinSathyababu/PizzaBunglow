@@ -42,6 +42,43 @@ public class AddOnsStoreService implements AddOnStore{
 		}
 		return null;
 	}
+	
+	@Override
+	public AddOns getAddOnsById(int id) {
+		// TODO Auto-generated method stub
+		if(id > 0
+				&& addOnsList!=null) {
+		for(AddOns addOns: addOnsList) {
+			if(addOns!=null && id==addOns.getId()) {
+				return addOns;
+			}
+		}
+		}
+		return null;
+	}
+	@Override
+	public boolean updateAddOnsById(AddOns addOns) {
+		// TODO Auto-generated method stub
+		AddOns addOns1=getAddOnsById(addOns.getId());
+		if(addOns1!=null) 
+		{
+		addOnsList.remove(addOns1);
+		addOnsList.add(addOns);
+		return true;
+		}
+		return false;
+	}
+	@Override
+	public boolean deleteAddOnsById(int id) {
+		// TODO Auto-generated method stub
+		AddOns addOns=getAddOnsById(id);
+		if(addOns!=null) 
+		{
+		addOnsList.remove(addOns);
+		return true;
+		}
+		return false;
+	}
 
 	
 }

@@ -12,4 +12,9 @@ public interface AddOnStore {
 	
 	public AddOns getAddOnsByName(String addOnsName);
 	
+	public AddOns getAddOnsById(int id);
+	
+	public boolean updateAddOnsById(AddOns addOns);
+	
+	public boolean deleteAddOnsById(int id);
 }
