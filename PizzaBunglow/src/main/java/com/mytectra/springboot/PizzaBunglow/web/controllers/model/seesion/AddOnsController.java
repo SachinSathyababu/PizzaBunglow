@@ -1,9 +1,9 @@
-package com.mytectra.springboot.PizzaBunglow.web.controllers;
+/*package com.mytectra.springboot.PizzaBunglow.web.controllers.model.seesion;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,15 +11,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
-
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mytectra.springboot.PizzaBunglow.Store.AddOnStore;
 import com.mytectra.springboot.PizzaBunglow.model.AddOns;
-
-
+import com.mytectra.springboot.PizzaBunglow.model.Pizza;
+import com.mytectra.springboot.PizzaBunglow.web.controllers.model.AddOnsClient;
+import com.mytectra.springboot.PizzaBunglow.web.controllers.model.RequestScopeBean;
+import com.mytectra.springboot.PizzaBunglow.web.controllers.model.seesion.SessionScopeBean;
 
 @RestController
 public class AddOnsController {
@@ -27,9 +29,25 @@ public class AddOnsController {
 	@Autowired
 	private AddOnStore addOnsStore;
 	
-	@GetMapping("/addOns")
+	@Autowired
+	private AddOnsClient clientBean;
+	
+	//Session Bean
+	@Autowired
+	private SessionScopeBean scope;
+	
+	@Autowired
+	private RequestScopeBean req;
+	
+	//@GetMapping("/addOns")
+	@RequestMapping("/addOns")
  	public @ResponseBody List<AddOns> getAddOns(){
-		return addOnsStore.getAllAddOns();
+		scope.count();
+		System.out.println("Sesseion Count is " + scope.getCount());
+		
+		req.count();
+		System.out.println("Request Count is " + req.getCount());
+ 		return addOnsStore.getAllAddOns();
  	}
 	
 	@GetMapping("/addOns/search")
@@ -55,9 +73,10 @@ public class AddOnsController {
 			@RequestHeader(name = "clientName" ,required = false) String client,
 			@RequestHeader(name = "clientId" ,required = false) String clientId) {
 		addOns.setId(id);
-		
+		clientBean.setClientName(client);
+		clientBean.setClientId(clientId);
 		if(addOnsStore.updateAddOnsById(addOns)) {
-			return "Success";
+			return "Success"+clientBean.getClientId()+"==="+clientBean.getClientName();
 		}else {
 			return "Failure";
 		}
@@ -72,3 +91,4 @@ public class AddOnsController {
 		}
 	}
 }
+*/

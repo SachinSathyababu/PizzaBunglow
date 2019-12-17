@@ -3,9 +3,12 @@ package com.mytectra.springboot.PizzaBunglow.web.controllers;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import javax.websocket.server.PathParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mytectra.springboot.PizzaBunglow.Store.PizzaStore;
@@ -33,7 +37,9 @@ public class PizzaController {
 	private RequestScopeBean bean;
 	
 	//@RequestMapping(path = "/pizzas" , method = RequestMethod.GET)
-	@GetMapping("/pizzas")
+	/*
+	 * Using HttpServlet Request 
+	 * @GetMapping("/pizzas")
 	public List<Pizza> getPizzas(HttpServletRequest request){
 		System.out.println(request.getHeader("client"));
 		System.out.println(request.getParameter("name"));
@@ -41,6 +47,13 @@ public class PizzaController {
 		System.out.print(request.getMethod());
  bean.setClient(request.getHeader("client"));
 
+		
+		return pizzaStore.getAllPizzas();
+	
+	}*/
+	
+	@GetMapping("/pizzas")
+	public List<Pizza> getPizzas(){
 		
 		return pizzaStore.getAllPizzas();
 	
@@ -54,11 +67,14 @@ public class PizzaController {
 	}
 	
 	@PostMapping("/pizzas")
-	public String addPizza(@RequestBody Pizza pizza) {
+	public String addPizza(@Valid @RequestBody Pizza pizza) {
+
+		
 		pizzaStore.addPizza(pizza);
 		return "SUCCESS";
 	}
 
+	
 	//Path Variable
 	@GetMapping("/pizzas/{id}")
 	public Pizza getPizza(@PathVariable("id") Integer id , @RequestHeader(name = "client" ,required = false) String client) {

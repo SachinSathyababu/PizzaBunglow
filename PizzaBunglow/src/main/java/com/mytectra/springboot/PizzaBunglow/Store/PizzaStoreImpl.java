@@ -2,9 +2,16 @@ package com.mytectra.springboot.PizzaBunglow.Store;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.Valid;
+import javax.validation.Validator;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.annotation.Validated;
 
 import com.mytectra.springboot.PizzaBunglow.model.Pizza;
 import com.mytectra.springboot.PizzaBunglow.web.controllers.model.RequestScopeBean;
@@ -15,17 +22,27 @@ public class PizzaStoreImpl implements PizzaStore{
 	private List<Pizza> pizzas= new ArrayList<Pizza>();
 	
 	@Autowired
-	private RequestScopeBean bean;
+	private Validator validator;
+	
+	/*@Autowired
+	private RequestScopeBean bean;*/
 
 	@Override
-	public void addPizza(Pizza pizza) {
+	public void addPizza( @NotNull Pizza pizza) {
+		Set<ConstraintViolation<Pizza>> result = validator.validate(pizza);
+		if(result.isEmpty()) {
 		//System.out.println("for " + bean.getClient());
-		if(pizza!=null && 
+		/*if(pizza!=null && 
 				pizza.getName()!=null && !pizza.getName().trim().isEmpty() &&
 				pizza.getId()!=0 && pizza.getCost()!=0 && 
-				pizza.getDescription()!=null && !pizza.getDescription().trim().isEmpty()){
+				pizza.getDescription()!=null && !pizza.getDescription().trim().isEmpty()){*/
 		pizzas.add(pizza);
-	}
+		}
+		
+		/*else {
+			throw new IllegalArgumentException();
+		}*/
+	//}
 	}
 	
 	@Override

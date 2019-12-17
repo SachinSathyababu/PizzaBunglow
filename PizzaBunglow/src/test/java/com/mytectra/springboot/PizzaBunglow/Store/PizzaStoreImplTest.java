@@ -5,20 +5,39 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Spy;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.validation.beanvalidation.BeanValidationPostProcessor;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import com.mytectra.springboot.PizzaBunglow.PizzaKitchen.PizzaKitchenServiceTest;
+import com.mytectra.springboot.PizzaBunglow.config.TestConfig3;
 import com.mytectra.springboot.PizzaBunglow.model.AddOns;
 import com.mytectra.springboot.PizzaBunglow.model.Pizza;
 
+@ExtendWith(MockitoExtension.class)
 public class PizzaStoreImplTest{
 	
+	@InjectMocks
 	private PizzaStoreImpl store;
 	
-	@BeforeEach
-	public void init() {
-	 store= new PizzaStoreImpl();
-	}
+	@Spy
+	private Validator valid =  Validation.buildDefaultValidatorFactory().getValidator();	
 	
 	@Test
 	public void test_AddingAllTypesOfPizza() {
@@ -35,10 +54,10 @@ public class PizzaStoreImplTest{
 		
 		
 		
-		store.addPizza(pizza);
+		//store.addPizza(pizza);
 		store.addPizza(pizza1);
-		store.addPizza(pizza2);
 		store.addPizza(pizza3);
+		store.addPizza(pizza2);
 		store.addPizza(pizza4);
 		store.addPizza(pizza5);
 		store.addPizza(pizza6);
