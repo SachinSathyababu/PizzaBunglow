@@ -5,8 +5,15 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonRootName;
+
+
+@JsonRootName("add_onn")
 public class AddOns {
 	
+	@JsonProperty("add_id")
 	@Positive(message = "cannot be negative number")
 	private int id;
 	

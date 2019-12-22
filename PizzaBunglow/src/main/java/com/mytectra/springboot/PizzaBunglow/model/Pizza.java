@@ -6,11 +6,23 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonRootName;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+
+@JsonRootName("pizza")
 public class Pizza {
+	
+	@JsonProperty("pizza_id" )
 	@Positive(message = "cannot be negative number")
 	private int id;
-			
+		
+	
+	
 	@NotEmpty(message = "Pizza Name Cannot be empty or null")	
 	@Size(min = 3 , max = 50 , message = "Size to be between 3 - 50 length")
 	@NotBlank(message ="Pizza Name Cannot be white spaces")

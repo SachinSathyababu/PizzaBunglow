@@ -2,10 +2,14 @@ package com.mytectra.springboot.PizzaBunglow.web.controllers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
+import javax.validation.constraints.Size;
 import javax.websocket.server.PathParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +42,7 @@ import com.mytectra.springboot.PizzaBunglow.web.controllers.model.ResponseWrappe
 import com.mytectra.springboot.PizzaBunglow.web.validators.CustomValidator;
 
 //@Controller
+// @Validated is used for method leven validations
 @Validated
 @RestController
 @RequestMapping("/pizzas")
@@ -71,7 +76,7 @@ public class PizzaController {
 	}
 	
 	@GetMapping("/search")
-	public Pizza getPizza(@RequestParam(required = true , name = "name") String name){
+	public Pizza getPizza(@RequestParam(required = true , name = "name") @Size(min = 10) String name){
 		Pizza pizza= pizzaStore.getPizzaByName(name);
 		return pizza;
 	
@@ -84,21 +89,38 @@ public class PizzaController {
 		
 	}
 	
-	@ExceptionHandler(MethodArgumentNotValidException.class)
+/*	@ExceptionHandler(MethodArgumentNotValidException.class)
 	@ResponseStatus(value = HttpStatus.BAD_REQUEST)
 	public ResponseWrapper<?>  handleBindingEx(MethodArgumentNotValidException obj) {
 		BindingResult results = obj.getBindingResult();
 		List<FieldError> errors = results.getFieldErrors();
 		List<Error> errs = new ArrayList<Error>();
 		for(FieldError err : errors) {
-			String errMsg = String.format("%s Field is failed deu to %s , value given is %s", err.getField() , err.getDefaultMessage() , err.getRejectedValue());
+			String errMsg = String.format("%s Field is failed due to %s , value given is %s", err.getField() , err.getDefaultMessage() , err.getRejectedValue());
 			Error errS = new Error(err.getField(),errMsg);
 			errs.add(errS);
 		}
 		
 		return  new ResponseWrapper<List<Error> >(errs, Status.FAILURE);
+	}*/
+	
+
+	@ExceptionHandler(ConstraintViolationException.class)
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST)
+	public ResponseWrapper<?>  handleConstraintEx(ConstraintViolationException obj) {
+		
+		 Set<ConstraintViolation<?>> results = obj.getConstraintViolations();
+		//List<FieldError> errors = results.getFieldErrors();
+		List<Error> errs = new ArrayList<Error>();
+	for(ConstraintViolation err : results) {
+		String errMsg = String.format("%s Field is failed due to %s , value given is %s", err.getPropertyPath().toString() , err.getMessage() , err.getInvalidValue());
+		Error errS = new Error(err.getPropertyPath().toString(),errMsg);
+		errs.add(errS);
 	}
 	
+	return  new ResponseWrapper<List<Error> >(errs, Status.FAILURE);
+}
+
 	@PostMapping( headers = "List")
 	public String addPizzaList(@Valid @RequestBody List<Pizza> pizzaList ) {
 		pizzaStore.addPizzaList(pizzaList);
