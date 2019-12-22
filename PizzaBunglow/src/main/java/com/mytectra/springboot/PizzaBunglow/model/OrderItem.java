@@ -1,11 +1,22 @@
 package com.mytectra.springboot.PizzaBunglow.model;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
+
 public class OrderItem {
 	
+	
+	@NotEmpty(message = "Pizza Requests Cannot be empty or null")	
+	@NotBlank(message ="Pizza Requests Cannot be white spaces")
 	private Pizza pizza;
 	 
+	@Positive(message = "OrderItem count cannot be negative number")
 	private int count;
 
+	@NotEmpty(message = "AddOns Name Cannot be empty or null")	
+	@NotBlank(message ="Addons Name Cannot be white spaces")
 	private AddOns addOns;
 	
 	public OrderItem() {

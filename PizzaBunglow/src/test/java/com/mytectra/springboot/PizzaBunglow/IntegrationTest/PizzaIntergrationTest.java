@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 public class PizzaIntergrationTest {
 
-	@Test
+	//@Test
 	public void  testIntegartion() throws IOException {
 		URL url = new URL("http://localhost:8080/pizzas/1" );
 		

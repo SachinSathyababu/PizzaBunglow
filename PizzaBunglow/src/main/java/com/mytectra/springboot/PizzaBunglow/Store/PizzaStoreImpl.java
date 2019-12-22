@@ -46,6 +46,23 @@ public class PizzaStoreImpl implements PizzaStore{
 	}
 	
 	@Override
+	public void addPizzaList( @NotNull List<Pizza> pizzaList) {
+		
+		
+		//System.out.println("for " + bean.getClient());
+		if(pizzaList!=null && pizzaList.size()>0) {
+		for(Pizza pizza: pizzaList) {
+		if(pizza!=null && 
+				pizza.getName()!=null && !pizza.getName().trim().isEmpty() &&
+				pizza.getId()!=0 && pizza.getCost()!=0 && 
+				pizza.getDescription()!=null && !pizza.getDescription().trim().isEmpty()){
+		pizzas.add(pizza);
+		}
+		}
+		}
+	}
+	
+	@Override
 	public List<Pizza> getAllPizzas() {
 		//System.out.println("for " + bean.getClient());
 

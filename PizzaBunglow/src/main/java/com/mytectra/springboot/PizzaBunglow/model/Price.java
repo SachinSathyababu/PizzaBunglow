@@ -1,13 +1,19 @@
 package com.mytectra.springboot.PizzaBunglow.model;
 
+import javax.validation.constraints.Positive;
+
 public class Price {
 	
+	@Positive(message = "costPrice cannot be negative number")
 	private double costPrice;
 	
+	@Positive(message = "discount cannot be negative number")
 	private double discount;
 	
+	@Positive(message = "tax cannot be negative number")
 	private double tax;
 	
+	@Positive(message = "finalPrice cannot be negative number")
 	private double finalPrice;
 	
 	public Price() {}

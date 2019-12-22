@@ -12,7 +12,7 @@ public class Pizza {
 	private int id;
 			
 	@NotEmpty(message = "Pizza Name Cannot be empty or null")	
-	@Size(min = 3 , max = 50 , message = "Size to be 3 - 50")
+	@Size(min = 3 , max = 50 , message = "Size to be between 3 - 50 length")
 	@NotBlank(message ="Pizza Name Cannot be white spaces")
 	private String name;
 	

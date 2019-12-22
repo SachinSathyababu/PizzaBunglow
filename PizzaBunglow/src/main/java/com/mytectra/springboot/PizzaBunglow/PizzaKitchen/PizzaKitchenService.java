@@ -1,5 +1,6 @@
 package com.mytectra.springboot.PizzaBunglow.PizzaKitchen;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +25,13 @@ public class PizzaKitchenService implements PizzaKitchen{
 	private Billing billingService;
 	
 	@Override
-	public PizzaOrder Order(PizzaRequests pizzaRequests, List<AddOnsRequest> addOnsList) 	 {
+	public PizzaOrder Order(PizzaRequests pizzaRequests, List<AddOnsRequest> addOnsList, String phoneNumber, Date orderDate) 	 {
 		PizzaOrder order= new PizzaOrder();
 		try {
 			order = bakerService.bake(pizzaRequests, addOnsList);
 			billingService.bill(order);
+			order.setPhoneNumber(phoneNumber);
+			order.setOrderDate(orderDate);
 		} catch (PizzaBakeException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -1,9 +1,12 @@
 package com.mytectra.springboot.PizzaBunglow.model;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-import javax.validation.constraints.AssertTrue;
+import javax.validation.constraints.FutureOrPresent;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Positive;
@@ -21,16 +24,20 @@ public class PizzaOrder {
 	
 	public enum Status { CANCELED, PROCESSING, DELIVERED };
 	
-	
+	@NotEmpty(message = "Order Status Cannot be empty or null")	
+	@NotBlank(message ="Order Status Cannot be white spaces")
 	private Status status;
 	
-	
+	@NotEmpty(message = "Order Message Cannot be empty or null")
+	@Size(min = 3 , max = 50 , message = "Size to be between 3 - 50 length")
+	@NotBlank(message ="Order Message Cannot be white spaces")
 	private String message;
 	
 	@Pattern(regexp = "[0-9]{10}" , message = "invalid phone number")
 	private String phoneNumber;
 	
-	
+	@FutureOrPresent(message="Order Date is past date")
+	private Date orderDate;
 	
 	public String getMessage() {
 		return message;
@@ -78,6 +85,22 @@ public class PizzaOrder {
 
 	public void addOrder(OrderItem order) {
 		orderItem.add(order);
+	}
+
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+
+	public Date getOrderDate() {
+		return orderDate;
+	}
+
+	public void setOrderDate(Date orderDate) {
+		this.orderDate = orderDate;
 	}
 
 	

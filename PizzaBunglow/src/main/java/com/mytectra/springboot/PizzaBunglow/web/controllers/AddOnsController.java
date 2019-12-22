@@ -2,8 +2,9 @@ package com.mytectra.springboot.PizzaBunglow.web.controllers;
 
 import java.util.List;
 
+import org.assertj.core.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,7 +21,7 @@ import com.mytectra.springboot.PizzaBunglow.Store.AddOnStore;
 import com.mytectra.springboot.PizzaBunglow.model.AddOns;
 
 
-
+@Validated
 @RestController
 public class AddOnsController {
 
@@ -33,7 +34,7 @@ public class AddOnsController {
  	}
 	
 	@GetMapping("/addOns/search")
- 	public AddOns getAddOn(@RequestParam (name="name") String name){
+ 	public AddOns getAddOn(@RequestParam (name="name") @NonNull String name){
 		AddOns addOn= addOnsStore.getAddOnsByName(name);
 		return addOn;
  	}
