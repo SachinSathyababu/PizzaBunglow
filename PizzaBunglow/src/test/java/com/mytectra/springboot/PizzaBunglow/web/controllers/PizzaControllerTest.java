@@ -12,6 +12,7 @@ import org.mockito.verification.VerificationMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -108,21 +109,32 @@ public class PizzaControllerTest {
 		pizza.setCost(300);
 		pizza.setDescription("topped with panner");
 		
-		Pizza pizza1= new Pizza();
-		pizza1.setId(2);
-		pizza1.setName("Chicken Pizza");
-		pizza1.setCost(450);
-		pizza1.setDescription("topped with chicken");
-		
-		List<Pizza> pizzaList= new ArrayList<>();
-		pizzaList.add(pizza);
-		pizzaList.add(pizza1);
 		Mockito.when(pizzaStore.getPizzaByName(pizza.getName())).thenReturn(pizza);
 		
 		mvc.perform(MockMvcRequestBuilders.get(URI.create("/pizzas/search")).param("name", pizza.getName()))
 		.andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
 		.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
 		.andExpect(MockMvcResultMatchers.jsonPath("$.pizza_id").value(pizza.getId()));
+
+		
+	}
+	
+	@Test
+	public void testGetPizzasSearchXML() throws Exception {
+		
+
+		Pizza pizza= new Pizza();
+		pizza.setId(1);
+		pizza.setName("Panner Pizza");
+		pizza.setCost(300);
+		pizza.setDescription("topped with panner");
+		
+		Mockito.when(pizzaStore.getPizzaByName(pizza.getName())).thenReturn(pizza);
+		
+		mvc.perform(MockMvcRequestBuilders.get(URI.create("/pizzas/search")).param("name", pizza.getName()).accept(MediaType.APPLICATION_XML_VALUE))
+		.andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
+		.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_XML_VALUE))
+		.andExpect(MockMvcResultMatchers.xpath("/pizza/pizza_id").string("1"));
 
 		
 	}
@@ -146,6 +158,198 @@ public class PizzaControllerTest {
 		
 		Mockito.verify(pizzaStore, Mockito.times(1)).addPizza(Mockito.any(Pizza.class));
 
+		
+	}
+	
+	@Test
+	public void testGetPizzasInsertXml() throws Exception {
+		
+		
+		String xmlPizza = "<pizza><name>Panner Pizza</name><description>topped with panner</description><cost>300</cost><pizza_id>1</pizza_id></pizza>";
+
+		
+		mvc.perform(MockMvcRequestBuilders.post(URI.create("/pizzas")).content(xmlPizza).contentType(MediaType.APPLICATION_XML_VALUE).accept(MediaType.APPLICATION_XML_VALUE))
+		.andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
+		.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_XML_VALUE))
+		.andExpect(MockMvcResultMatchers.xpath("/ResponseWrapper/status").string("SUCCESS"));
+		
+		Mockito.verify(pizzaStore, Mockito.times(1)).addPizza(Mockito.any(Pizza.class));
+
+		
+	}
+	
+	
+	
+	@Test
+	public void testListPizzasInsert() throws Exception {
+		
+		
+		String jsonPizza = "[" 
+				+  "{"
+				+ "\"pizza_id\"  : 1,"
+				+ " \"name\": \"Panner Pizza Hot\","
+				+ "\"description\": \"topped with panner spicy\","
+				+ " \"cost\": 300"
+				+ "}"
+				+ "," 
+				+  "{"
+			    + "\"pizza_id\"  : 2,"
+				+ " \"name\": \"Chicken Pizza Hot\","
+				+ "\"description\": \"topped with chicken spicy\","
+				+ " \"cost\": 400"
+				+ "}"
+				+ "]";
+
+		
+		
+		mvc.perform(MockMvcRequestBuilders.post(URI.create("/pizzas")).content(jsonPizza).contentType(MediaType.APPLICATION_JSON_VALUE).header("List","123"))
+		.andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
+		.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
+		.andExpect(MockMvcResultMatchers.jsonPath("$.status").value("SUCCESS"));
+		
+		Mockito.verify(pizzaStore, Mockito.times(1)).addPizzaList(Mockito.any());
+
+		
+	}
+	
+		
+	@Test
+	public void testListPizzasInsertXml() throws Exception {
+		
+		
+		String xmlPizzaList = "<List><item><name>Panner Pizza</name><description>topped with panner</description><cost>300</cost><pizza_id>1</pizza_id></item>"
+				+"<item><name>Chicken Pizza</name><description>topped with chicken</description><cost>450</cost><pizza_id>2</pizza_id></item></List>";
+	
+		mvc.perform(MockMvcRequestBuilders.post(URI.create("/pizzas")).content(xmlPizzaList).contentType(MediaType.APPLICATION_XML_VALUE).header("List","123").accept(MediaType.APPLICATION_XML_VALUE))
+		.andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
+		.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_XML_VALUE))
+		.andExpect(MockMvcResultMatchers.xpath("/ResponseWrapper/status").string("SUCCESS"));
+		
+		Mockito.verify(pizzaStore, Mockito.times(1)).addPizzaList(Mockito.any());
+
+		
+	}
+	
+	@Test
+	public void testGetPizzaById() throws Exception {
+		
+
+		Pizza pizza= new Pizza();
+		pizza.setId(1);
+		pizza.setName("Panner Pizza");
+		pizza.setCost(300);
+		pizza.setDescription("topped with panner");
+		
+		Mockito.when(pizzaStore.getPizzaById(pizza.getId())).thenReturn(pizza);
+		
+		mvc.perform(MockMvcRequestBuilders.get(URI.create("/pizzas/1")))
+		.andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
+		.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
+		.andExpect(MockMvcResultMatchers.jsonPath("$.pizza_id").value(pizza.getId()));
+
+		
+	}
+	
+	@Test
+	public void testGetPizzaByIdXml() throws Exception {
+		
+
+		Pizza pizza= new Pizza();
+		pizza.setId(1);
+		pizza.setName("Panner Pizza");
+		pizza.setCost(300);
+		pizza.setDescription("topped with panner");
+		
+		Mockito.when(pizzaStore.getPizzaById(pizza.getId())).thenReturn(pizza);
+		
+		mvc.perform(MockMvcRequestBuilders.get(URI.create("/pizzas/1")).accept(MediaType.APPLICATION_XML_VALUE))
+		.andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
+		.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_XML_VALUE))
+		.andExpect(MockMvcResultMatchers.xpath("/pizza/pizza_id").string("1"));
+
+		
+	}
+	
+	@Test
+	public void testUpdatePizzaById() throws Exception {
+		
+		String jsonPizza = "{"
+				+ "\"pizza_id\"  : 1,"
+				+ " \"name\": \"Pan Pizza Hot\","
+				+ "\"description\": \"topped with pan spicy\","
+				+ " \"cost\": 300"
+				+ "}";
+		
+		Pizza pizza= new Pizza();
+		pizza.setId(1);
+		pizza.setName("Panner Pizza");
+		pizza.setCost(300);
+		pizza.setDescription("topped with panner");
+		
+		Mockito.when(pizzaStore.getPizzaById(pizza.getId())).thenReturn(pizza);
+		
+		mvc.perform(MockMvcRequestBuilders.put(URI.create("/pizzas/1")).content(jsonPizza).contentType(MediaType.APPLICATION_JSON_VALUE))
+		.andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
+		.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
+		.andExpect(MockMvcResultMatchers.jsonPath("$.status").value("SUCCESS"));
+		
+	}
+	
+	@Test
+	public void testUpdatePizzaByIdXml() throws Exception {
+		
+		String xmlPizza = "<pizza><name>Panner Pizza</name><description>topped with panner</description><cost>300</cost><pizza_id>1</pizza_id></pizza>";
+		
+		Pizza pizza= new Pizza();
+		pizza.setId(1);
+		pizza.setName("Panner Pizza");
+		pizza.setCost(300);
+		pizza.setDescription("topped with panner");
+		
+		Mockito.when(pizzaStore.getPizzaById(pizza.getId())).thenReturn(pizza);
+		
+		mvc.perform(MockMvcRequestBuilders.put(URI.create("/pizzas/1")).content(xmlPizza).contentType(MediaType.APPLICATION_XML_VALUE).accept(MediaType.APPLICATION_XML_VALUE))
+		.andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
+		.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_XML_VALUE))
+		.andExpect(MockMvcResultMatchers.xpath("/ResponseWrapper/status").string("SUCCESS"));
+		
+	}
+	
+	@Test
+	public void testDeletePizzaById() throws Exception {
+		
+		Pizza pizza= new Pizza();
+		pizza.setId(1);
+		pizza.setName("Panner Pizza");
+		pizza.setCost(300);
+		pizza.setDescription("topped with panner");
+		
+		Mockito.when(pizzaStore.getPizzaById(pizza.getId())).thenReturn(pizza);
+		
+		mvc.perform(MockMvcRequestBuilders.delete(URI.create("/pizzas/1")))
+		.andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
+		.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
+		.andExpect(MockMvcResultMatchers.jsonPath("$.status").value("SUCCESS"));
+
+		
+	}
+	
+	@Test
+	public void testDeletePizzaByIdXml() throws Exception {
+		
+		
+		Pizza pizza= new Pizza();
+		pizza.setId(1);
+		pizza.setName("Panner Pizza");
+		pizza.setCost(300);
+		pizza.setDescription("topped with panner");
+		
+		Mockito.when(pizzaStore.getPizzaById(pizza.getId())).thenReturn(pizza);
+		
+		mvc.perform(MockMvcRequestBuilders.delete(URI.create("/pizzas/1")).accept(MediaType.APPLICATION_XML_VALUE))
+		.andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
+		.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_XML_VALUE))
+		.andExpect(MockMvcResultMatchers.xpath("/ResponseWrapper/status").string("SUCCESS"));
 		
 	}
 

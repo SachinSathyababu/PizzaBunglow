@@ -10,10 +10,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 
 
-@JsonRootName("add_onn")
+@JsonRootName("addons")
 public class AddOns {
 	
-	@JsonProperty("add_id")
+	@JsonProperty("addons_id")
 	@Positive(message = "cannot be negative number")
 	private int id;
 	

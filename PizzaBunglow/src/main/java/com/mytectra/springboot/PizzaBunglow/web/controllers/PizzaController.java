@@ -75,14 +75,14 @@ public class PizzaController {
 		return pizzaStore.getAllPizzas();
 	}
 	
-	@GetMapping("/search")
+	@GetMapping(path="/search", produces = {MediaType.APPLICATION_JSON_VALUE , MediaType.APPLICATION_XML_VALUE})
 	public Pizza getPizza(@RequestParam(required = true , name = "name") @Size(min = 10) String name){
 		Pizza pizza= pizzaStore.getPizzaByName(name);
 		return pizza;
 	
 	}
 	
-	@PostMapping( consumes = {MediaType.APPLICATION_JSON_VALUE , MediaType.APPLICATION_XML_VALUE} )
+	@PostMapping( consumes = {MediaType.APPLICATION_JSON_VALUE , MediaType.APPLICATION_XML_VALUE},produces = {MediaType.APPLICATION_JSON_VALUE , MediaType.APPLICATION_XML_VALUE} )
 	public ResponseWrapper<?> addPizza(@Valid @RequestBody Pizza pizza ) {
 		pizzaStore.addPizza(pizza);
 		return new ResponseWrapper<String>("Succesfully Created", Status.SUCCESS);
@@ -121,32 +121,32 @@ public class PizzaController {
 	return  new ResponseWrapper<List<Error> >(errs, Status.FAILURE);
 }
 
-	@PostMapping( headers = "List")
-	public String addPizzaList(@Valid @RequestBody List<Pizza> pizzaList ) {
+	@PostMapping( headers = "List",consumes = {MediaType.APPLICATION_JSON_VALUE , MediaType.APPLICATION_XML_VALUE}, produces={MediaType.APPLICATION_JSON_VALUE , MediaType.APPLICATION_XML_VALUE})
+	public ResponseWrapper<?> addPizzaList(@Valid @RequestBody List<Pizza> pizzaList ) {
 		pizzaStore.addPizzaList(pizzaList);
-		return "SUCCESS";
+		return new ResponseWrapper<String>("Succesfully Created", Status.SUCCESS);
 	}
 
 	
 	//Path Variable
-	@GetMapping("/{id}")
-	public Pizza getPizza(@PathVariable("id") Integer id , @RequestHeader(name = "client" ,required = false) String client) {
+	@GetMapping(path="/{id}", produces={MediaType.APPLICATION_JSON_VALUE , MediaType.APPLICATION_XML_VALUE})
+	public Pizza getPizza(@Valid @PathVariable("id") Integer id ,@Valid @RequestHeader(name = "client" ,required = false) String client) {
 		System.out.println("THis is Header Param" + client);
 		return pizzaStore.getPizzaById(id);
 	}
 	
-	@PutMapping("/{id}")
-	public String updatePizza(@PathVariable("id") Integer id ,@RequestBody Pizza pizza) {
+	@PutMapping(path="/{id}", consumes = {MediaType.APPLICATION_JSON_VALUE , MediaType.APPLICATION_XML_VALUE}, produces={MediaType.APPLICATION_JSON_VALUE , MediaType.APPLICATION_XML_VALUE})
+	public ResponseWrapper<?> updatePizza(@Valid @PathVariable("id") Integer id ,@Valid @RequestBody Pizza pizza) {
 		pizza.setId(id);
 		pizzaStore.updatePizza(pizza);
-		return "SUCCESS";
+		return new ResponseWrapper<String>("Succesfully Updated", Status.SUCCESS);
 	}
 	
-	@DeleteMapping("/{id}")
-	public String deletePizza(@PathVariable("id") Integer id) {
+	@DeleteMapping(path="/{id}", produces={MediaType.APPLICATION_JSON_VALUE , MediaType.APPLICATION_XML_VALUE})
+	public ResponseWrapper<?> deletePizza(@Valid @PathVariable("id") Integer id) {
 		
 		pizzaStore.deletePizza(id);
-		return "SUCCESS";
+		return new ResponseWrapper<String>("Succesfully Deleted", Status.SUCCESS);
 	}
 	
 
