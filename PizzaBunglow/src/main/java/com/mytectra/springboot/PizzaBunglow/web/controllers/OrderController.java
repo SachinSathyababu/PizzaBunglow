@@ -6,8 +6,8 @@ import java.util.Set;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,65 +21,65 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
-
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mytectra.springboot.PizzaBunglow.web.controllers.model.Error;
-import com.mytectra.springboot.PizzaBunglow.Store.AddOnStore;
-import com.mytectra.springboot.PizzaBunglow.model.AddOns;
+import com.mytectra.springboot.PizzaBunglow.web.controllers.model.OrderRequest;
+import com.mytectra.springboot.PizzaBunglow.PizzaKitchen.PizzaKitchen;
+import com.mytectra.springboot.PizzaBunglow.model.PizzaOrder;
 import com.mytectra.springboot.PizzaBunglow.web.controllers.model.ResponseWrapper;
 import com.mytectra.springboot.PizzaBunglow.web.controllers.model.ResponseWrapper.Status;
 
-
 @Validated
 @RestController
-public class AddOnsController {
+public class OrderController {
 
 	@Autowired
-	private AddOnStore addOnsStore;
+	private PizzaKitchen pizzaKitchen;
 	
-	@GetMapping(path="/addOns", produces= {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
- 	public @ResponseBody List<AddOns> getAddOns(){
-		return addOnsStore.getAllAddOns();
+	@GetMapping(path="/orders", produces= {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+ 	public @ResponseBody List<PizzaOrder> getAllPizzaOrder(){
+		return pizzaKitchen.getAllOrders();
  	}
 	
-	@GetMapping(path="/addOns/search", produces= {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
- 	public AddOns getAddOn(@RequestParam (name="name") @NotNull String name){
-		AddOns addOn= addOnsStore.getAddOnsByName(name);
-		return addOn;
+	@GetMapping(path="/orders/search", produces= {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+ 	public List<PizzaOrder> getPizzaOrder(@RequestParam (name="Phone") @NotNull String phone){
+		
+		return pizzaKitchen.getOrderByPhoneNumber(phone);
  	}
 	
-	@GetMapping(path="/addOns/{id}", produces= {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-	public AddOns getAddOns(@PathVariable("id") Integer id, @RequestHeader(name = "client" ,required = false) String client) {
+	@GetMapping(path="/orders/{id}", produces= {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+	public PizzaOrder getPizzaOrder(@PathVariable("id") Integer id, @RequestHeader(name = "client" ,required = false) String client) {
 		System.out.println("Client is "+client);
-		return addOnsStore.getAddOnsById(id);
+		return pizzaKitchen.getOrderById(id);
 	}
 	
-	@PostMapping(path="/addOns", consumes={MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}, produces= {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-	public ResponseWrapper<?> AddaddOns(@RequestBody AddOns addOns) {
-		addOnsStore.addAddOns(addOns);
-		return new ResponseWrapper<String>("Successfully Added", Status.SUCCESS);
+	@PostMapping(path="/orders", consumes={MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}, produces= {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+	public PizzaOrder addOrders(@RequestBody @Valid OrderRequest request) throws Exception {
+		
+		return pizzaKitchen.AddOrder(request.getPizzaRequests(), request.getAddOnsRequests(), request.getPhoneNumber(), request.getOrderDate());
+		//return new ResponseWrapper<String>("Successfully Added", Status.SUCCESS);
 	}
 	
-	@PutMapping(path="/addOns/{id}", consumes={MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}, produces= {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-	public ResponseWrapper<?> updateAddOns(@PathVariable("id") Integer id, @RequestBody AddOns addOns, 
+	@PutMapping(path="/orders/{id}", consumes={MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}, produces= {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+	public ResponseWrapper<?> updateOrder(@PathVariable("id") Integer id, @RequestBody PizzaOrder order, 
 			@RequestHeader(name = "clientName" ,required = false) String client,
 			@RequestHeader(name = "clientId" ,required = false) String clientId) {
-		addOns.setId(id);
+		order.setOrderId(id);
 		
-		if(addOnsStore.updateAddOnsById(addOns)) {
+		if(id>0 && pizzaKitchen.updateOrder(order)) {
 			return new ResponseWrapper<String>("Successfully Updated", Status.SUCCESS);
 		}else {
 			return new ResponseWrapper<String>("Failed to Update", Status.FAILURE);
 		}
 	}
 	
-	@DeleteMapping(path="/addOns/{id}", produces= {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-	public ResponseWrapper<?> deleteAddOns(@PathVariable("id") Integer id) {
-		if(addOnsStore.deleteAddOnsById(id)) {
+	@DeleteMapping(path="/orders/{id}", produces= {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+	public ResponseWrapper<?> deleteOrder(@PathVariable("id") Integer id) {
+		if(id>0 && pizzaKitchen.deleteOrderById(id)) {
 			return new ResponseWrapper<String>("Successfully Deleted", Status.SUCCESS);
 		}else {
 			return new ResponseWrapper<String>("Failed to delete", Status.FAILURE);

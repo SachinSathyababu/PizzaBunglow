@@ -16,10 +16,7 @@ import com.mytectra.springboot.PizzaBunglow.web.controllers.model.ResponseWrappe
 import com.mytectra.springboot.PizzaBunglow.web.controllers.model.ResponseWrapper.Status;
 
 @RestControllerAdvice
-public class ControllerAdvise {
-
-	
-	
+public class ControllerAdvise {	
 	
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	@ResponseStatus(value = HttpStatus.BAD_REQUEST)
@@ -34,6 +31,15 @@ public class ControllerAdvise {
 		}
 		
 		return  new ResponseWrapper<List<Error> >(errs, Status.FAILURE);
+	}
+	
+	@ExceptionHandler(Exception.class)
+	@ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+	public ResponseWrapper<?>  handleBindingEx(Exception obj) {
+		String errMsg= String.format(" %s Field is failed due to %s , value given is NULL", obj.getCause() , obj.getMessage() );
+		Error err=new Error(obj.getLocalizedMessage(), errMsg);		
+	
+	return new ResponseWrapper<Error>(err, Status.FAILURE);
 	}
 	
 

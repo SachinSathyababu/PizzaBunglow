@@ -12,6 +12,8 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class PizzaOrder {
 	
 	@Positive(message="INVALID ORDER ID")
@@ -36,6 +38,7 @@ public class PizzaOrder {
 	@Pattern(regexp = "[0-9]{10}" , message = "invalid phone number")
 	private String phoneNumber;
 	
+	@JsonFormat(pattern = "dd-MM-yyyy HH:mm")
 	@FutureOrPresent(message="Order Date is past date")
 	private Date orderDate;
 	

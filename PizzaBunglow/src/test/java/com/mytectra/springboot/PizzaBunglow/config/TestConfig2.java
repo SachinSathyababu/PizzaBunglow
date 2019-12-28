@@ -8,7 +8,7 @@ import com.mytectra.springboot.PizzaBunglow.Store.AddOnStore;
 import com.mytectra.springboot.PizzaBunglow.Store.PizzaStore;
 
 
-@Configuration
+//@Configuration
 public class TestConfig2 {
 
 	@Bean

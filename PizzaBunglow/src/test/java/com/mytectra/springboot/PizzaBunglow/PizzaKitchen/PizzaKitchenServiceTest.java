@@ -105,7 +105,7 @@ public class PizzaKitchenServiceTest {
 		
 		Mockito.doNothing().when(biller).bill(order);
 		
-		order=kitchen.Order(requests, arequests, "8970932314", new Date());
+		order=kitchen.AddOrder(requests, arequests, "8970932314", new Date());
 		
 		assertEquals(1200, order.getPrice().getCostPrice());
 	}
@@ -165,7 +165,7 @@ public class PizzaKitchenServiceTest {
 		
 		Mockito.doNothing().when(biller).bill(order);*/
 		
-		order=kitchen.Order(requests, arequests,"8970932314", new Date());
+		order=kitchen.AddOrder(requests, arequests,"8970932314", new Date());
 		
 		assertEquals(null, order);
 	}

@@ -9,6 +9,15 @@ import com.mytectra.springboot.PizzaBunglow.model.PizzaRequests;
 
 public interface PizzaKitchen {
 	
-	public PizzaOrder Order(PizzaRequests pizzaRequest,List<AddOnsRequest> addOnsList, String phoneNumber, Date orderDate) throws Exception;
+	public PizzaOrder AddOrder(PizzaRequests pizzaRequest,List<AddOnsRequest> addOnsList, String phoneNumber, Date orderDate) throws Exception;
 
+	public List<PizzaOrder> getAllOrders();
+	
+	public List<PizzaOrder> getOrderByPhoneNumber(String phone);
+	
+	public PizzaOrder getOrderById(int id);
+	
+	public boolean updateOrder(PizzaOrder order);
+	
+	public boolean deleteOrderById(int id);
 }
