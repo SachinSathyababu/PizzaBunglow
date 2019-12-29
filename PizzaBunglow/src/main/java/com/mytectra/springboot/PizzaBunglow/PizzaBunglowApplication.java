@@ -29,7 +29,7 @@ public class PizzaBunglowApplication {
 		
 		 PizzaStore pizzaStore = ctx.getBean(PizzaStore.class);
 
-		Pizza pizza= new Pizza();
+		/*Pizza pizza= new Pizza();
 		pizza.setId(1);
 		pizza.setName("Panner Pizza");
 		pizza.setCost(300);
@@ -65,7 +65,7 @@ public class PizzaBunglowApplication {
 		AddOnStore addOnstore= ctx.getBean(AddOnStore.class);
 		addOnstore.addAddOns(addOns1);
 		addOnstore.addAddOns(addOns2);
-		addOnstore.addAddOns(addOns3);
+		addOnstore.addAddOns(addOns3);*/
 		
 	/*	PizzaRequest pizzaRequest = new PizzaRequest();
 		pizzaRequest.setBase(Base.THIN);
