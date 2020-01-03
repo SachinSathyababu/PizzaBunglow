@@ -22,6 +22,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import com.mytectra.springboot.PizzaBunglow.Baker.Baker;
 import com.mytectra.springboot.PizzaBunglow.Baker.PizzaBakeException;
 import com.mytectra.springboot.PizzaBunglow.Billing.Billing;
+import com.mytectra.springboot.PizzaBunglow.Store.PizzaNotFoundException;
 import com.mytectra.springboot.PizzaBunglow.config.TestConfig3;
 import com.mytectra.springboot.PizzaBunglow.model.AddOns;
 import com.mytectra.springboot.PizzaBunglow.model.AddOnsRequest;
@@ -51,7 +52,7 @@ public class PizzaKitchenServiceTest {
 	private PizzaKitchenService kitchen;
 	
 	//@Test
-	public void test_Kitchen() {
+	public void test_Kitchen() throws PizzaNotFoundException {
 		
 		Pizza pizza= new Pizza(1, "Chicken Pizza", "Chicken Pizza with Spicy", 350);
 		AddOns addOns= new AddOns(1, "Chicken Burger", "Chicken Burger with Spicy", 350);
@@ -111,7 +112,7 @@ public class PizzaKitchenServiceTest {
 	}
 	
 	@Test
-	public void test_Kitchen_throwException() {
+	public void test_Kitchen_throwException() throws PizzaNotFoundException {
 		
 		Pizza pizza= new Pizza(1, "Chicken Pizza", "Chicken Pizza with Spicy", 350);
 		AddOns addOns= new AddOns(1, "Chicken Burger", "Chicken Burger with Spicy", 350);

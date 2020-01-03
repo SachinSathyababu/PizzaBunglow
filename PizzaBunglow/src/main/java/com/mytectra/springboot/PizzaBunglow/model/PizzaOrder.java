@@ -26,8 +26,6 @@ public class PizzaOrder {
 	
 	public enum Status { CANCELED, PROCESSING, DELIVERED };
 	
-	@NotEmpty(message = "Order Status Cannot be empty or null")	
-	@NotBlank(message ="Order Status Cannot be white spaces")
 	private Status status;
 	
 	@NotEmpty(message = "Order Message Cannot be empty or null")

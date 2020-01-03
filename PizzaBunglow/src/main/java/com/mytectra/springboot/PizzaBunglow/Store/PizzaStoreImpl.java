@@ -74,7 +74,7 @@ public class PizzaStoreImpl implements PizzaStore{
 	}
 
 	@Override
-	public Pizza getPizzaByName(String pizzaName) {
+	public Pizza getPizzaByName(String pizzaName) throws PizzaNotFoundException {
 		//System.out.println("for " + bean.getClient());
 
 		if(pizzaName!=null && !pizzaName.trim().isEmpty()) {
@@ -85,11 +85,11 @@ public class PizzaStoreImpl implements PizzaStore{
 		}
 			
 		}
-		return null;
+		throw new PizzaNotFoundException();
 	}
 
 	@Override
-	public Pizza getPizzaById(int id) {
+	public Pizza getPizzaById(int id) throws PizzaNotFoundException {
 		// TODO Auto-generated method stub
 		//System.out.println("for " + bean.getClient());
 
@@ -101,11 +101,11 @@ public class PizzaStoreImpl implements PizzaStore{
 			}
 			
 			}
-			return null;
+		throw new PizzaNotFoundException();
 	}
 
 	@Override
-	public void updatePizza(Pizza pizza) {
+	public void updatePizza(Pizza pizza) throws PizzaNotFoundException {
 		// TODO Auto-generated method stub
 		if(pizza!=null /*&& 
 				pizza.getName()!=null && !pizza.getName().trim().isEmpty() &&
@@ -115,6 +115,8 @@ public class PizzaStoreImpl implements PizzaStore{
 		if(pizza1!=null) {
 			pizzas.remove(pizza1);
 			pizzas.add(pizza);
+		}else {
+			throw new PizzaNotFoundException();
 		}
 			
 			
@@ -123,7 +125,7 @@ public class PizzaStoreImpl implements PizzaStore{
 	}
 
 	@Override
-	public void deletePizza(int id) {
+	public void deletePizza(int id) throws PizzaNotFoundException {
 		// TODO Auto-generated method stub
 		if(id>0 /*&& 
 				pizza.getName()!=null && !pizza.getName().trim().isEmpty() &&

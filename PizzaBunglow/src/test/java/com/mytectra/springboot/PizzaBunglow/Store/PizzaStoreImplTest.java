@@ -1,6 +1,7 @@
 package com.mytectra.springboot.PizzaBunglow.Store;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.validation.beanvalidation.BeanValidationPostProcessor;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import com.mytectra.springboot.PizzaBunglow.Baker.PizzaBakeException;
 import com.mytectra.springboot.PizzaBunglow.PizzaKitchen.PizzaKitchenServiceTest;
 import com.mytectra.springboot.PizzaBunglow.config.TestConfig3;
 import com.mytectra.springboot.PizzaBunglow.model.AddOns;
@@ -68,20 +70,20 @@ public class PizzaStoreImplTest{
 	}
 	
 	@Test
-	public void test_getNullPizza() {
+	public void test_getNullPizza() throws PizzaNotFoundException {
 		
-		assertEquals(null, store.getPizzaByName(null));
+		assertThrows(PizzaNotFoundException.class, () -> store.getPizzaByName(null));
 	}
 	
 	@Test
-	public void test_getEmptyPizzaName() {
+	public void test_getEmptyPizzaName() throws PizzaNotFoundException {
 		
-		assertEquals(null, store.getPizzaByName("   "));
+		assertThrows(PizzaNotFoundException.class, () -> store.getPizzaByName("   "));
 	}
 
 	
 	@Test
-	public void test_getPizzaByPizzaName() {
+	public void test_getPizzaByPizzaName() throws PizzaNotFoundException {
 		
 		
 		Pizza pizza2= new Pizza(1, "Chicken Pizza", "Chicken Pizza with Spicy", 350);
@@ -94,9 +96,9 @@ public class PizzaStoreImplTest{
 	}
 
 	@Test
-	public void test_getPizzaByPizzaNameFromEmptyList() {
+	public void test_getPizzaByPizzaNameFromEmptyList() throws PizzaNotFoundException {
 		
-		assertEquals(null, store.getPizzaByName("Chicken Pizza"));
+		assertThrows(PizzaNotFoundException.class, () ->  store.getPizzaByName("Chicken Pizza"));
 	}
 	
 	

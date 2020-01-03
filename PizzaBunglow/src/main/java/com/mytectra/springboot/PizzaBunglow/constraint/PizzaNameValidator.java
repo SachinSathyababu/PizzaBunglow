@@ -6,6 +6,7 @@ import javax.validation.ConstraintValidatorContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.mytectra.springboot.PizzaBunglow.Store.PizzaNotFoundException;
 import com.mytectra.springboot.PizzaBunglow.Store.PizzaStore;
 
 @Component
@@ -20,7 +21,13 @@ public class PizzaNameValidator implements ConstraintValidator<ValidPizza, Strin
 
 	@Override
 	public boolean isValid(String value, ConstraintValidatorContext context) {
-		return pizzaStore.getPizzaByName(value) != null;
+		try {
+			return pizzaStore.getPizzaByName(value) != null;
+		} catch (PizzaNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
 	}
 
 }

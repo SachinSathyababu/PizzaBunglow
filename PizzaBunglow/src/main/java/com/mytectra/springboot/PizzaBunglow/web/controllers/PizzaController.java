@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mytectra.springboot.PizzaBunglow.Store.PizzaNotFoundException;
 import com.mytectra.springboot.PizzaBunglow.Store.PizzaStore;
 import com.mytectra.springboot.PizzaBunglow.model.Pizza;
 import com.mytectra.springboot.PizzaBunglow.web.controllers.model.Error;
@@ -76,7 +77,7 @@ public class PizzaController {
 	}
 	
 	@GetMapping(path="/search", produces = {MediaType.APPLICATION_JSON_VALUE , MediaType.APPLICATION_XML_VALUE})
-	public Pizza getPizza(@RequestParam(required = true , name = "name") @Size(min = 10) String name){
+	public Pizza getPizza(@RequestParam(required = true , name = "name") @Size(min = 10) String name) throws PizzaNotFoundException{
 		Pizza pizza= pizzaStore.getPizzaByName(name);
 		return pizza;
 	
@@ -120,6 +121,22 @@ public class PizzaController {
 	
 	return  new ResponseWrapper<List<Error> >(errs, Status.FAILURE);
 }
+	
+	@ExceptionHandler(PizzaNotFoundException.class)
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST)
+	public ResponseWrapper<?>  handlePizzaNotFoundEx(PizzaNotFoundException obj) {
+		
+		 //Set<ConstraintViolation<?>> results = obj.getConstraintViolations();
+		//List<FieldError> errors = results.getFieldErrors();
+		List<Error> errs = new ArrayList<Error>();
+	//for(ConstraintViolation err : results) {
+		//String errMsg = String.format("%s Field is failed due to %s , value given is %s", err.getPropertyPath().toString() , err.getMessage() , err.getInvalidValue());
+		Error errS = new Error("Pizza Unavailable","Requested Pizza is not available");
+		errs.add(errS);
+	//}
+	
+	return  new ResponseWrapper<List<Error> >(errs, Status.FAILURE);
+	}
 
 	@PostMapping( headers = "List",consumes = {MediaType.APPLICATION_JSON_VALUE , MediaType.APPLICATION_XML_VALUE}, produces={MediaType.APPLICATION_JSON_VALUE , MediaType.APPLICATION_XML_VALUE})
 	public ResponseWrapper<?> addPizzaList(@Valid @RequestBody List<Pizza> pizzaList ) {
@@ -130,20 +147,20 @@ public class PizzaController {
 	
 	//Path Variable
 	@GetMapping(path="/{id}", produces={MediaType.APPLICATION_JSON_VALUE , MediaType.APPLICATION_XML_VALUE})
-	public Pizza getPizza(@Valid @PathVariable("id") Integer id ,@Valid @RequestHeader(name = "client" ,required = false) String client) {
+	public Pizza getPizza(@Valid @PathVariable("id") Integer id ,@Valid @RequestHeader(name = "client" ,required = false) String client) throws PizzaNotFoundException {
 		System.out.println("THis is Header Param" + client);
 		return pizzaStore.getPizzaById(id);
 	}
 	
 	@PutMapping(path="/{id}", consumes = {MediaType.APPLICATION_JSON_VALUE , MediaType.APPLICATION_XML_VALUE}, produces={MediaType.APPLICATION_JSON_VALUE , MediaType.APPLICATION_XML_VALUE})
-	public ResponseWrapper<?> updatePizza(@Valid @PathVariable("id") Integer id ,@Valid @RequestBody Pizza pizza) {
+	public ResponseWrapper<?> updatePizza(@Valid @PathVariable("id") Integer id ,@Valid @RequestBody Pizza pizza) throws PizzaNotFoundException {
 		pizza.setId(id);
 		pizzaStore.updatePizza(pizza);
 		return new ResponseWrapper<String>("Succesfully Updated", Status.SUCCESS);
 	}
 	
 	@DeleteMapping(path="/{id}", produces={MediaType.APPLICATION_JSON_VALUE , MediaType.APPLICATION_XML_VALUE})
-	public ResponseWrapper<?> deletePizza(@Valid @PathVariable("id") Integer id) {
+	public ResponseWrapper<?> deletePizza(@Valid @PathVariable("id") Integer id) throws PizzaNotFoundException {
 		
 		pizzaStore.deletePizza(id);
 		return new ResponseWrapper<String>("Succesfully Deleted", Status.SUCCESS);

@@ -10,16 +10,23 @@ public interface PizzaStore {
 	
 	public void addPizza(Pizza pizza);
 	
-	public void addPizzaList( @NotNull List<Pizza> pizzaList) ;
+	public void addPizzaList(List<Pizza> pizzaList) ;
 	
+	
+	//ALways limit to top 10
 	public List<Pizza> getAllPizzas();
 	
-	public Pizza getPizzaByName(String pizzaName);
 	
-	public Pizza getPizzaById(int id);
+	//throw PNFE , 
+	public Pizza getPizzaByName(String pizzaName) throws PizzaNotFoundException;
 	
-	public void updatePizza(Pizza pizza);
+	//throw PNFE
+	public Pizza getPizzaById(int id) throws PizzaNotFoundException;
 	
-	public void deletePizza(int id);
+	//throw PNFE
+	public void updatePizza(Pizza pizza) throws PizzaNotFoundException;
+	
+	
+	public void deletePizza(int id) throws PizzaNotFoundException;
 
 }

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import com.mytectra.springboot.PizzaBunglow.Baker.Baker;
 import com.mytectra.springboot.PizzaBunglow.Baker.PizzaBakeException;
 import com.mytectra.springboot.PizzaBunglow.Billing.Billing;
+import com.mytectra.springboot.PizzaBunglow.Store.PizzaNotFoundException;
 import com.mytectra.springboot.PizzaBunglow.model.AddOnsRequest;
 import com.mytectra.springboot.PizzaBunglow.model.Pizza;
 import com.mytectra.springboot.PizzaBunglow.model.PizzaOrder;
@@ -27,7 +28,7 @@ public class PizzaKitchenService implements PizzaKitchen{
 	private Billing billingService;
 	
 	@Override
-	public PizzaOrder AddOrder(PizzaRequests pizzaRequests, List<AddOnsRequest> addOnsList, String phoneNumber, Date orderDate) 	 {
+	public PizzaOrder AddOrder(PizzaRequests pizzaRequests, List<AddOnsRequest> addOnsList, String phoneNumber, Date orderDate) throws PizzaNotFoundException 	 {
 		PizzaOrder order= new PizzaOrder();
 		try {
 			order = bakerService.bake(pizzaRequests, addOnsList);
