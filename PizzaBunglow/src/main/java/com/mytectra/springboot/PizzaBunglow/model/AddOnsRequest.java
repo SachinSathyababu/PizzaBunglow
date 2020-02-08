@@ -15,7 +15,7 @@ public class AddOnsRequest {
 	@NotEmpty(message = "AddOns Name Cannot be empty or null")	
 	@Size(min = 3 , max = 50 , message = "Size to be between 3 - 50 length")
 	@NotBlank(message ="Addons Name Cannot be white spaces")
-	@ValidAddons
+	//@ValidAddons
 	private String name;
 	
 	@Positive(message = "cannot be negative number")

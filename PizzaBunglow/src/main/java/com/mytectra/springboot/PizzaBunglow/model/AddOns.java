@@ -1,5 +1,10 @@
 package com.mytectra.springboot.PizzaBunglow.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Positive;
@@ -11,23 +16,31 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 
 
 @JsonRootName("addons")
-public class AddOns {
+@Entity
+@Table(name="addons")
+@NamedQuery(name = "getAddOnsByName" , query = "FROM AddOns a where a.name = ?1")
+public class AddOns extends Item{
 	
-	@JsonProperty("addons_id")
+	/*@JsonProperty("addons_id")
 	@Positive(message = "cannot be negative number")
-	private int id;
+	@Column(name="id")
+	@Id
+	private int id;*/
 	
 	@NotEmpty(message = "AddOns Name Cannot be empty or null")	
 	@Size(min = 3 , max = 50 , message = "Size to be between 3 - 50 length")
 	@NotBlank(message ="Addons Name Cannot be white spaces")
+	@Column(name="name")
 	private String name;
 	
 	@NotEmpty(message = "Addons description Cannot be empty or null")	
 	@Size(min = 3 , max = 50 , message = "Size to be between 3 - 50 length")
 	@NotBlank(message ="Addons description Cannot be white spaces")
+	@Column(name="description")
 	private String description;
 	
 	@Positive(message = "cannot be negative number")
+	@Column(name="cost")
 	private int cost;
 	
 	public AddOns() {		}
@@ -35,21 +48,11 @@ public class AddOns {
 	
 
 	public AddOns(int id, String name, String description, int cost) {
-		super();
-		this.id = id;
+		super(id);
+		
 		this.name = name;
 		this.description = description;
 		this.cost = cost;
-	}
-
-
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
 	}
 
 	public String getName() {

@@ -66,7 +66,7 @@ public class PizzaStoreImplTest{
 		store.addPizza(pizza7);
 		store.addPizza(pizza8);
 		
-		assertEquals(1, store.getAllPizzas().size());
+		assertEquals(2, store.getAllPizzas().size());
 	}
 	
 	@Test

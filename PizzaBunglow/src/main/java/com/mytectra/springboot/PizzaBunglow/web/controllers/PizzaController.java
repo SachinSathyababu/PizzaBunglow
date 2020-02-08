@@ -72,8 +72,14 @@ public class PizzaController {
 	}*/
 	
 	@GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE , MediaType.APPLICATION_XML_VALUE})
-	public List<Pizza> getPizzas(){
+	public List<Pizza> getPizzas(@RequestHeader(name = "Page" ,required = false) int page){
+		
+		if(page==0) {
 		return pizzaStore.getAllPizzas();
+		}else if(page>0){
+			return pizzaStore.getAllPizzas(page);
+		}
+		return null;
 	}
 	
 	@GetMapping(path="/search", produces = {MediaType.APPLICATION_JSON_VALUE , MediaType.APPLICATION_XML_VALUE})
@@ -84,7 +90,7 @@ public class PizzaController {
 	}
 	
 	@PostMapping( consumes = {MediaType.APPLICATION_JSON_VALUE , MediaType.APPLICATION_XML_VALUE},produces = {MediaType.APPLICATION_JSON_VALUE , MediaType.APPLICATION_XML_VALUE} )
-	public ResponseWrapper<?> addPizza(@Valid @RequestBody Pizza pizza ) {
+	public ResponseWrapper<?> addPizza(@RequestBody Pizza pizza ) {
 		pizzaStore.addPizza(pizza);
 		return new ResponseWrapper<String>("Succesfully Created", Status.SUCCESS);
 		

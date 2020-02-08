@@ -61,8 +61,8 @@ private AddOnStore addOnStore;
 			mvc.perform(MockMvcRequestBuilders.get(URI.create("/addOns"))).
 			andExpect(MockMvcResultMatchers.status().is2xxSuccessful()).
 			andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE)).
-			andExpect(MockMvcResultMatchers.jsonPath("$[0].addons_id").value(1)).
-			andExpect(MockMvcResultMatchers.jsonPath("$[1].addons_id").value(2));
+			andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(1)).
+			andExpect(MockMvcResultMatchers.jsonPath("$[1].id").value(2));
 		}
 		
 		@Test
@@ -96,8 +96,8 @@ private AddOnStore addOnStore;
 			mvc.perform(MockMvcRequestBuilders.get(URI.create("/addOns")).accept(MediaType.APPLICATION_XML_VALUE)).
 			andExpect(MockMvcResultMatchers.status().is2xxSuccessful()).
 			andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_XML_VALUE)).
-			andExpect(MockMvcResultMatchers.xpath("/List/item[1]/addons_id").string("1")).
-			andExpect(MockMvcResultMatchers.xpath("/List/item[2]/addons_id").string("2"));
+			andExpect(MockMvcResultMatchers.xpath("/List/item[1]/id").string("1")).
+			andExpect(MockMvcResultMatchers.xpath("/List/item[2]/id").string("2"));
 		}
 		
 		@Test
@@ -114,7 +114,7 @@ private AddOnStore addOnStore;
 			mvc.perform(MockMvcRequestBuilders.get(URI.create("/addOns/search")).param("name", addOns1.getName())).
 			andExpect(MockMvcResultMatchers.status().is2xxSuccessful()).
 			andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE)).
-			andExpect(MockMvcResultMatchers.jsonPath("$.addons_id").value(1));
+			andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1));
 		}
 		
 		@Test
@@ -131,7 +131,7 @@ private AddOnStore addOnStore;
 			mvc.perform(MockMvcRequestBuilders.get(URI.create("/addOns/search")).param("name", addOns1.getName()).accept(MediaType.APPLICATION_XML_VALUE)).
 			andExpect(MockMvcResultMatchers.status().is2xxSuccessful()).
 			andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_XML_VALUE)).
-			andExpect(MockMvcResultMatchers.xpath("/addons/addons_id").string("1"));
+			andExpect(MockMvcResultMatchers.xpath("/addons/id").string("1"));
 		}
 		
 		@Test
@@ -148,7 +148,7 @@ private AddOnStore addOnStore;
 			mvc.perform(MockMvcRequestBuilders.get(URI.create("/addOns/1"))).
 			andExpect(MockMvcResultMatchers.status().is2xxSuccessful()).
 			andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE)).
-			andExpect(MockMvcResultMatchers.jsonPath("$.addons_id").value(1));
+			andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1));
 		}
 		
 		@Test
@@ -165,7 +165,7 @@ private AddOnStore addOnStore;
 			mvc.perform(MockMvcRequestBuilders.get(URI.create("/addOns/1")).accept(MediaType.APPLICATION_XML_VALUE)).
 			andExpect(MockMvcResultMatchers.status().is2xxSuccessful()).
 			andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_XML_VALUE)).
-			andExpect(MockMvcResultMatchers.xpath("/addons/addons_id").string("1"));
+			andExpect(MockMvcResultMatchers.xpath("/addons/id").string("1"));
 		}
 		
 		@Test

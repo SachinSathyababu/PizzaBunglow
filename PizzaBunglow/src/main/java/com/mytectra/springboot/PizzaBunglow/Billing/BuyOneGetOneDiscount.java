@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
+import com.mytectra.springboot.PizzaBunglow.model.AddOns;
 import com.mytectra.springboot.PizzaBunglow.model.OrderItem;
 import com.mytectra.springboot.PizzaBunglow.model.Pizza;
 import com.mytectra.springboot.PizzaBunglow.model.PizzaOrder;
@@ -16,25 +17,33 @@ public class BuyOneGetOneDiscount implements Discount{
 	public double discount(PizzaOrder order) {
 		// TODO Auto-generated method stub
 		
-		for(OrderItem item: order.getOrderItem()) {
-			if(item.getPizza()!=null && item.getPizza().getName().equalsIgnoreCase("Panner Pizza")) 
+		for(OrderItem orderItem: order.getOrderItem()) {
+			if(orderItem.getItem()!=null && orderItem.getItem() instanceof Pizza) {
+				Pizza pizza= (Pizza) orderItem.getItem();
+				
+			if(pizza.getName().equalsIgnoreCase("Panner Pizza")) 
 			{
 				
-				int count= item.getCount();
+				int count= orderItem.getCount();
 				for(int i=1; i<=count;i++) {
-				item.setCount(item.getCount()+1);
+					orderItem.setCount(orderItem.getCount()+1);
 				}
 			}
 			
-			if(item.getAddOns()!=null && item.getAddOns().getName().equalsIgnoreCase("Fries")) 
+			}
+			
+			if(orderItem.getItem()!=null && orderItem.getItem() instanceof AddOns) {
+				AddOns addons=(AddOns) orderItem.getItem();
+			if(addons.getName().equalsIgnoreCase("Fries")) 
 			{
 				
-				int count= item.getCount();
+				int count= orderItem.getCount();
 				for(int i=1; i<=count;i++) {
-				item.setCount(item.getCount()+1);
+					orderItem.setCount(orderItem.getCount()+1);
 				}
 			}
-		}
+			}
+			}
 		
 		
 		return 0;

@@ -2,11 +2,13 @@ package com.mytectra.springboot.PizzaBunglow.Billing;
 
 import java.util.List;
 
+import org.hamcrest.core.IsInstanceOf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
+import com.mytectra.springboot.PizzaBunglow.model.AddOns;
 import com.mytectra.springboot.PizzaBunglow.model.OrderItem;
 import com.mytectra.springboot.PizzaBunglow.model.Pizza;
 import com.mytectra.springboot.PizzaBunglow.model.PizzaOrder;
@@ -33,14 +35,16 @@ public class BillingService implements Billing{
 		Price price= new Price();
 		order.setPrice(price);
 		double totalPrice = 0;
-		for(OrderItem item : order.getOrderItem()) {
+		for(OrderItem orderItem : order.getOrderItem()) {
 			
-			if(item.getPizza()!=null) {
-			totalPrice += (item.getPizza().getCost() * item.getCount());
+			if(orderItem.getItem()!=null && orderItem.getItem() instanceof Pizza) {
+			Pizza pizza= (Pizza) orderItem.getItem();
+				totalPrice += (pizza.getCost() * orderItem.getCount());
 			}
 			
-			if(item.getAddOns()!=null) {
-				totalPrice += (item.getAddOns().getCost() * item.getCount());
+			else if(orderItem.getItem()!=null && orderItem.getItem() instanceof AddOns) {
+				AddOns addons=(AddOns) orderItem.getItem();
+				totalPrice += (addons.getCost() * orderItem.getCount());
 			}
 		}
 		price.setCostPrice(totalPrice);

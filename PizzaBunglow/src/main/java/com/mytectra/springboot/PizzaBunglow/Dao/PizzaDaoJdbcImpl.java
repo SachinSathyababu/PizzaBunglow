@@ -33,7 +33,7 @@ public class PizzaDaoJdbcImpl implements PizzaDao {
 		@Override
 		public Pizza mapRow(ResultSet arg0, int arg1) throws SQLException {
 			Pizza pizza = new Pizza();
-			pizza.setId(arg0.getInt("pizza_id"));
+			pizza.setId((arg0.getInt("pizza_id")));
 			pizza.setName(arg0.getString("pizza_name"));
 			pizza.setDescription(arg0.getString("pizza_description"));
 			pizza.setCost(arg0.getInt("pizza_cost"));

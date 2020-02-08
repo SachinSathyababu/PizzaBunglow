@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.mytectra.springboot.PizzaBunglow.Store.AddOnStore;
+import com.mytectra.springboot.PizzaBunglow.Store.AddOnsNotFoundException;
 import com.mytectra.springboot.PizzaBunglow.Store.PizzaNotFoundException;
 import com.mytectra.springboot.PizzaBunglow.Store.PizzaStore;
 import com.mytectra.springboot.PizzaBunglow.model.AddOns;
@@ -33,7 +34,7 @@ public class BakerService implements Baker{
 	
 	
 	@Override
-	public PizzaOrder bake(PizzaRequests pizzaRequests, List<AddOnsRequest> addOnsList) throws PizzaBakeException, PizzaNotFoundException {
+	public PizzaOrder bake(PizzaRequests pizzaRequests, List<AddOnsRequest> addOnsList) throws PizzaBakeException, PizzaNotFoundException, AddOnsNotFoundException {
 		PizzaOrder order = new PizzaOrder();
 		order.setOrderId(new Random().nextInt());
 		for(PizzaRequest request : pizzaRequests.getPizzaRequests() ) {
@@ -54,7 +55,11 @@ public class BakerService implements Baker{
 			}
 		}
 		
-		
+		if(order.getOrderItem()!=null && order.getOrderItem().size()>0) {
+			for(OrderItem item: order.getOrderItem()) {
+				item.setOrder(order);
+			}
+		}
 		order.setStatus(Status.PROCESSING);
 		order.setMessage("Thank You!");
 		return order;

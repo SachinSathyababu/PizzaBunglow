@@ -1,6 +1,7 @@
 package com.mytectra.springboot.PizzaBunglow.Store;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,20 +50,20 @@ private AddOnsStoreService store;
 	}
 	
 	@Test
-	public void test_getNullPizza() {
+	public void test_getNullPizza() throws AddOnsNotFoundException {
 		
-		assertEquals(null, store.getAddOnsByName(null));
+		assertThrows(AddOnsNotFoundException.class, () -> store.getAddOnsByName(null));
 	}
 	
 	@Test
-	public void test_getEmptyPizzaName() {
+	public void test_getEmptyPizzaName() throws AddOnsNotFoundException {
 		
-		assertEquals(null, store.getAddOnsByName("   "));
+		assertThrows(AddOnsNotFoundException.class, () -> store.getAddOnsByName("   "));
 	}
 
 	
 	@Test
-	public void test_getAddOnsByName() {
+	public void test_getAddOnsByName() throws AddOnsNotFoundException {
 		
 		
 		AddOns addOns2= new AddOns(1, "Chicken Burger", "Chicken Burger with Spicy", 350);
@@ -75,9 +76,9 @@ private AddOnsStoreService store;
 	}
 
 	@Test
-	public void test_getAddOnsByAddOnsNameFromEmptyList() {
+	public void test_getAddOnsByAddOnsNameFromEmptyList() throws AddOnsNotFoundException {
 		
-		assertEquals(null, store.getAddOnsByName("Chicken Burger"));
+		assertThrows(AddOnsNotFoundException.class, () -> store.getAddOnsByName("Chicken Burger"));
 	}	
 
 	

@@ -10,11 +10,11 @@ public interface AddOnStore {
 	
 	public List<AddOns> getAllAddOns();
 	
-	public AddOns getAddOnsByName(String addOnsName);
+	public AddOns getAddOnsByName(String addOnsName) throws AddOnsNotFoundException ;
 	
-	public AddOns getAddOnsById(int id);
+	public AddOns getAddOnsById(int id) throws AddOnsNotFoundException ;
 	
-	public boolean updateAddOnsById(AddOns addOns);
+	public boolean updateAddOnsById(AddOns addOns) throws AddOnsNotFoundException ;
 	
-	public boolean deleteAddOnsById(int id);
+	public boolean deleteAddOnsById(int id) throws AddOnsNotFoundException;
 }

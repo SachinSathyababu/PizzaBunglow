@@ -28,7 +28,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mytectra.springboot.PizzaBunglow.web.controllers.model.Error;
 import com.mytectra.springboot.PizzaBunglow.web.controllers.model.OrderRequest;
+import com.mytectra.springboot.PizzaBunglow.Baker.PizzaBakeException;
 import com.mytectra.springboot.PizzaBunglow.PizzaKitchen.PizzaKitchen;
+import com.mytectra.springboot.PizzaBunglow.Store.AddOnsNotFoundException;
+import com.mytectra.springboot.PizzaBunglow.Store.PizzaNotFoundException;
 import com.mytectra.springboot.PizzaBunglow.model.PizzaOrder;
 import com.mytectra.springboot.PizzaBunglow.web.controllers.model.ResponseWrapper;
 import com.mytectra.springboot.PizzaBunglow.web.controllers.model.ResponseWrapper.Status;
@@ -107,5 +110,45 @@ public class OrderController {
 			Error err=new Error(obj.getLocalizedMessage(), errMsg);		
 		
 		return new ResponseWrapper<Error>(err, Status.FAILURE);
+	}
+	
+	@ExceptionHandler(AddOnsNotFoundException.class)
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST)
+	public ResponseWrapper<?> handleAddOnsNotFoundEx(AddOnsNotFoundException obj){
+		
+			
+			Error err=new Error("AddOns Not Available", "Failed to find the AddOns");		
+		
+		return new ResponseWrapper<Error>(err, Status.FAILURE);
+	}
+	
+	@ExceptionHandler(PizzaNotFoundException.class)
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST)
+	public ResponseWrapper<?>  handlePizzaNotFoundEx(PizzaNotFoundException obj) {
+		
+	
+		List<Error> errs = new ArrayList<Error>();
+	
+
+		Error errS = new Error("Pizza Unavailable","Requested Pizza is not available");
+		errs.add(errS);
+
+	
+	return  new ResponseWrapper<List<Error> >(errs, Status.FAILURE);
+	}
+	
+	@ExceptionHandler(PizzaBakeException.class)
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST)
+	public ResponseWrapper<?>  handlePizzaBakeEx(PizzaBakeException obj) {
+		
+	
+		List<Error> errs = new ArrayList<Error>();
+	
+
+		Error errS = new Error("Pizza Not Deliverable",obj.getMessage());
+		errs.add(errS);
+
+	
+	return  new ResponseWrapper<List<Error> >(errs, Status.FAILURE);
 	}
 }

@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mytectra.springboot.PizzaBunglow.web.controllers.model.Error;
 import com.mytectra.springboot.PizzaBunglow.Store.AddOnStore;
+import com.mytectra.springboot.PizzaBunglow.Store.AddOnsNotFoundException;
 import com.mytectra.springboot.PizzaBunglow.model.AddOns;
 import com.mytectra.springboot.PizzaBunglow.web.controllers.model.ResponseWrapper;
 import com.mytectra.springboot.PizzaBunglow.web.controllers.model.ResponseWrapper.Status;
@@ -47,13 +48,13 @@ public class AddOnsController {
  	}
 	
 	@GetMapping(path="/addOns/search", produces= {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
- 	public AddOns getAddOn(@RequestParam (name="name") @NotNull String name){
+ 	public AddOns getAddOn(@RequestParam (name="name") @NotNull String name) throws AddOnsNotFoundException{
 		AddOns addOn= addOnsStore.getAddOnsByName(name);
 		return addOn;
  	}
 	
 	@GetMapping(path="/addOns/{id}", produces= {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-	public AddOns getAddOns(@PathVariable("id") Integer id, @RequestHeader(name = "client" ,required = false) String client) {
+	public AddOns getAddOns(@PathVariable("id") Integer id, @RequestHeader(name = "client" ,required = false) String client) throws AddOnsNotFoundException {
 		System.out.println("Client is "+client);
 		return addOnsStore.getAddOnsById(id);
 	}
@@ -67,7 +68,7 @@ public class AddOnsController {
 	@PutMapping(path="/addOns/{id}", consumes={MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}, produces= {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
 	public ResponseWrapper<?> updateAddOns(@PathVariable("id") Integer id, @RequestBody AddOns addOns, 
 			@RequestHeader(name = "clientName" ,required = false) String client,
-			@RequestHeader(name = "clientId" ,required = false) String clientId) {
+			@RequestHeader(name = "clientId" ,required = false) String clientId) throws AddOnsNotFoundException {
 		addOns.setId(id);
 		
 		if(addOnsStore.updateAddOnsById(addOns)) {
@@ -78,7 +79,7 @@ public class AddOnsController {
 	}
 	
 	@DeleteMapping(path="/addOns/{id}", produces= {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-	public ResponseWrapper<?> deleteAddOns(@PathVariable("id") Integer id) {
+	public ResponseWrapper<?> deleteAddOns(@PathVariable("id") Integer id) throws AddOnsNotFoundException {
 		if(addOnsStore.deleteAddOnsById(id)) {
 			return new ResponseWrapper<String>("Successfully Deleted", Status.SUCCESS);
 		}else {
@@ -105,6 +106,16 @@ public class AddOnsController {
 		
 			String errMsg= String.format(" %s Field is failed due to %s , value given is NULL", obj.getCause() , obj.getMessage() );
 			Error err=new Error(obj.getLocalizedMessage(), errMsg);		
+		
+		return new ResponseWrapper<Error>(err, Status.FAILURE);
+	}
+	
+	@ExceptionHandler(AddOnsNotFoundException.class)
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST)
+	public ResponseWrapper<?> handleAddOnsNotFoundEx(AddOnsNotFoundException obj){
+		
+			
+			Error err=new Error("AddOns Not Available", "Failed to find the AddOns");		
 		
 		return new ResponseWrapper<Error>(err, Status.FAILURE);
 	}

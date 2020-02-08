@@ -16,6 +16,8 @@ public interface PizzaStore {
 	//ALways limit to top 10
 	public List<Pizza> getAllPizzas();
 	
+	public List<Pizza> getAllPizzas(int page);
+	
 	
 	//throw PNFE , 
 	public Pizza getPizzaByName(String pizzaName) throws PizzaNotFoundException;

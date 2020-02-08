@@ -10,6 +10,7 @@ import javax.validation.Validator;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
@@ -18,9 +19,13 @@ import com.mytectra.springboot.PizzaBunglow.model.Pizza;
 import com.mytectra.springboot.PizzaBunglow.web.controllers.model.RequestScopeBean;
 
 @Component
-public class PizzaStoreImpl implements PizzaStore{
+//@Primary
+public class PizzaStoreImplMongodb implements PizzaStore{
 	
 	private List<Pizza> pizzas= new ArrayList<Pizza>();
+	
+	@Autowired
+	private PizzaDao dao;
 	
 	@Autowired
 	private Validator validator;
@@ -37,8 +42,8 @@ public class PizzaStoreImpl implements PizzaStore{
 				pizza.getName()!=null && !pizza.getName().trim().isEmpty() &&
 				pizza.getId()!=0 && pizza.getCost()!=0 && 
 				pizza.getDescription()!=null && !pizza.getDescription().trim().isEmpty()){*/
-		pizzas.add(pizza);
-			
+		//pizzas.add(pizza);
+			dao.save(pizza);
 		}
 		
 		/*else {
@@ -58,8 +63,8 @@ public class PizzaStoreImpl implements PizzaStore{
 				pizza.getName()!=null && !pizza.getName().trim().isEmpty() &&
 				pizza.getId()!=0 && pizza.getCost()!=0 && 
 				pizza.getDescription()!=null && !pizza.getDescription().trim().isEmpty()){
-			pizzas.add(pizza);
-			
+			//pizzas.add(pizza);
+			dao.save(pizza);
 		}
 		}
 		}
@@ -69,8 +74,8 @@ public class PizzaStoreImpl implements PizzaStore{
 	public List<Pizza> getAllPizzas() {
 		//System.out.println("for " + bean.getClient());
 
-		return pizzas;
-		
+		//return pizzas;
+		return dao.getAllPizzas();
 	}
 
 	@Override
@@ -78,12 +83,12 @@ public class PizzaStoreImpl implements PizzaStore{
 		//System.out.println("for " + bean.getClient());
 
 		if(pizzaName!=null && !pizzaName.trim().isEmpty()) {
-		for(Pizza pizza : pizzas) {
+		/*for(Pizza pizza : pizzas) {
 			if(pizza.getName().equalsIgnoreCase(pizzaName)) {
 				return pizza;
 			}
-		}
-			
+		}*/
+			return dao.getPizzaByName(pizzaName);
 		}
 		throw new PizzaNotFoundException();
 	}
@@ -94,12 +99,12 @@ public class PizzaStoreImpl implements PizzaStore{
 		//System.out.println("for " + bean.getClient());
 
 		if(id>0) {
-			for(Pizza pizza : pizzas) {
+			/*for(Pizza pizza : pizzas) {
 				if(pizza.getId()==id) {
 					return pizza;
 				}
-			}
-			
+			}*/
+			return dao.getPizzaById(id);
 			}
 		throw new PizzaNotFoundException();
 	}
@@ -107,19 +112,20 @@ public class PizzaStoreImpl implements PizzaStore{
 	@Override
 	public void updatePizza(Pizza pizza) throws PizzaNotFoundException {
 		// TODO Auto-generated method stub
-		if(pizza!=null /*&& 
+		
+		Pizza pizza1= getPizzaById(pizza.getId());
+		if(pizza1!=null /*&& 
 				pizza.getName()!=null && !pizza.getName().trim().isEmpty() &&
 				pizza.getId()!=0 && pizza.getCost()!=0 && 
 				pizza.getDescription()!=null && !pizza.getDescription().trim().isEmpty()*/){
-		Pizza pizza1= getPizzaById(pizza.getId());
+		/*Pizza pizza1= getPizzaById(pizza.getId());
 		if(pizza1!=null) {
 			pizzas.remove(pizza1);
 			pizzas.add(pizza);
-		}else {
-			throw new PizzaNotFoundException();
-		}
+		}*/
 			
-			
+			dao.deletePizzaById(pizza1.getId());
+			dao.save(pizza);
 	}
 			
 	}
@@ -131,11 +137,16 @@ public class PizzaStoreImpl implements PizzaStore{
 				pizza.getName()!=null && !pizza.getName().trim().isEmpty() &&
 				pizza.getId()!=0 && pizza.getCost()!=0 && 
 				pizza.getDescription()!=null && !pizza.getDescription().trim().isEmpty()*/){
-		Pizza pizza1= getPizzaById(id);
+		/*Pizza pizza1= getPizzaById(id);
 		if(pizza1!=null) {
 			pizzas.remove(pizza1);
 			
-		}
+		}*/
+			Pizza pizza1= getPizzaById(id);
+			if(pizza1!=null)
+			{
+				dao.deletePizzaById(id);
+			}
 			
 	}
 			

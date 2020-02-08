@@ -1,13 +1,23 @@
 package com.mytectra.springboot.PizzaBunglow.model;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.validation.constraints.Positive;
 
+import org.hibernate.validator.constraints.Range;
+
+@Entity
 public class Price {
+	
+	@Id
+	@GeneratedValue
+	int id;
 	
 	@Positive(message = "costPrice cannot be negative number")
 	private double costPrice;
 	
-	@Positive(message = "discount cannot be negative number")
+	@Range(min=0)
 	private double discount;
 	
 	@Positive(message = "tax cannot be negative number")
@@ -48,6 +58,14 @@ public class Price {
 
 	public void setFinalPrice(double finalPrice) {
 		this.finalPrice = finalPrice;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	

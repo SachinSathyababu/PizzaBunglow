@@ -11,10 +11,15 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
 import com.mytectra.springboot.PizzaBunglow.Dao.PizzaDao;
+import com.mytectra.springboot.PizzaBunglow.Dao.PizzaPageRepository;
 import com.mytectra.springboot.PizzaBunglow.model.Pizza;
 import com.mytectra.springboot.PizzaBunglow.web.controllers.model.RequestScopeBean;
 
@@ -30,6 +35,10 @@ public class PizzaStoreImplJdbc implements PizzaStore{
 	@Autowired
 	private Validator validator;
 	
+	@Autowired
+	private PizzaPageRepository pizzaPage;
+	
+	
 	/*@Autowired
 	private RequestScopeBean bean;*/
 
@@ -38,14 +47,14 @@ public class PizzaStoreImplJdbc implements PizzaStore{
 		Set<ConstraintViolation<Pizza>> result = validator.validate(pizza);
 		if(result.isEmpty()) {
 		//System.out.println("for " + bean.getClient());
-		/*if(pizza!=null && 
+		if(pizza!=null && 
 				pizza.getName()!=null && !pizza.getName().trim().isEmpty() &&
-				pizza.getId()!=0 && pizza.getCost()!=0 && 
-				pizza.getDescription()!=null && !pizza.getDescription().trim().isEmpty()){*/
+				 pizza.getCost()!=0 && 
+				pizza.getDescription()!=null && !pizza.getDescription().trim().isEmpty()){
 		//pizzas.add(pizza);
 			dao.save(pizza);
 		}
-		
+		}
 		/*else {
 			throw new IllegalArgumentException();
 		}*/
@@ -79,7 +88,7 @@ public class PizzaStoreImplJdbc implements PizzaStore{
 	}
 
 	@Override
-	public Pizza getPizzaByName(String pizzaName) {
+	public Pizza getPizzaByName(String pizzaName) throws PizzaNotFoundException {
 		//System.out.println("for " + bean.getClient());
 
 		if(pizzaName!=null && !pizzaName.trim().isEmpty()) {
@@ -90,11 +99,11 @@ public class PizzaStoreImplJdbc implements PizzaStore{
 		}*/
 			return dao.getPizzaByName(pizzaName);
 		}
-		return null;
+		throw new PizzaNotFoundException();
 	}
 
 	@Override
-	public Pizza getPizzaById(int id) {
+	public Pizza getPizzaById(int id) throws PizzaNotFoundException {
 		// TODO Auto-generated method stub
 		//System.out.println("for " + bean.getClient());
 
@@ -106,13 +115,15 @@ public class PizzaStoreImplJdbc implements PizzaStore{
 			}*/
 			return dao.getPizzaById(id);
 			}
-			return null;
+		throw new PizzaNotFoundException();
 	}
 
 	@Override
-	public void updatePizza(Pizza pizza) {
+	public void updatePizza(Pizza pizza) throws PizzaNotFoundException {
 		// TODO Auto-generated method stub
-		if(pizza!=null /*&& 
+		
+		Pizza pizza1= getPizzaById(pizza.getId());
+		if(pizza1!=null /*&& 
 				pizza.getName()!=null && !pizza.getName().trim().isEmpty() &&
 				pizza.getId()!=0 && pizza.getCost()!=0 && 
 				pizza.getDescription()!=null && !pizza.getDescription().trim().isEmpty()*/){
@@ -122,14 +133,14 @@ public class PizzaStoreImplJdbc implements PizzaStore{
 			pizzas.add(pizza);
 		}*/
 			
-			dao.deletePizzaById(pizza.getId());
+			dao.deletePizzaById(pizza1.getId());
 			dao.save(pizza);
 	}
 			
 	}
 
 	@Override
-	public void deletePizza(int id) {
+	public void deletePizza(int id) throws PizzaNotFoundException {
 		// TODO Auto-generated method stub
 		if(id>0 /*&& 
 				pizza.getName()!=null && !pizza.getName().trim().isEmpty() &&
@@ -140,8 +151,27 @@ public class PizzaStoreImplJdbc implements PizzaStore{
 			pizzas.remove(pizza1);
 			
 		}*/
-			dao.deletePizzaById(id);
+			Pizza pizza1= getPizzaById(id);
+			if(pizza1!=null)
+			{
+				dao.deletePizzaById(id);
+			}
+			
 	}
 			
+	}
+
+	@Override
+	public List<Pizza> getAllPizzas(int page) {
+		// TODO Auto-generated method stub
+		page=page-1;
+		Pageable PageWithTwoElements = PageRequest.of(page, 2, Sort.by("name"));
+		List<Pizza> finalList= new ArrayList<>();
+		Page<Pizza> pizzas= pizzaPage.findAll(PageWithTwoElements);
+		
+		for(Pizza p: pizzas) {
+		finalList.add(p);
+		}
+		return finalList;
 	}
 }

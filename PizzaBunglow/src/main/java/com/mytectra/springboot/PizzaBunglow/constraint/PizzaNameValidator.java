@@ -21,12 +21,15 @@ public class PizzaNameValidator implements ConstraintValidator<ValidPizza, Strin
 
 	@Override
 	public boolean isValid(String value, ConstraintValidatorContext context) {
-		try {
-			return pizzaStore.getPizzaByName(value) != null;
-		} catch (PizzaNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
+			try {
+				return pizzaStore.getPizzaByName(value) != null;
+			} catch (PizzaNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				
+			}
+		
 		return false;
 	}
 

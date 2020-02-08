@@ -3,7 +3,9 @@ package com.mytectra.springboot.PizzaBunglow.Billing;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
+import com.mytectra.springboot.PizzaBunglow.model.AddOns;
 import com.mytectra.springboot.PizzaBunglow.model.OrderItem;
+import com.mytectra.springboot.PizzaBunglow.model.Pizza;
 import com.mytectra.springboot.PizzaBunglow.model.PizzaOrder;
 
 @Component
@@ -20,15 +22,21 @@ public class Flat20Discount implements Discount {
 		
 		double discount=0;
 			
-			for(OrderItem item: order.getOrderItem()) {
-			if(item.getPizza()!=null && !(item.getPizza().getName().equalsIgnoreCase("Panner Pizza")))
+			for(OrderItem orderItem: order.getOrderItem()) {
+				if(orderItem.getItem()!=null && orderItem.getItem() instanceof Pizza) {
+					Pizza pizza= (Pizza) orderItem.getItem();
+					
+					if(pizza.getName().equalsIgnoreCase("Panner Pizza")) 
 			{	
-			 discount = discount+item.getPizza().getCost() * 0.2 * item.getCount();
+			 discount = discount+pizza.getCost() * 0.2 * orderItem.getCount();
 			}
+				}
 			
-			if(item.getAddOns()!=null && !(item.getAddOns().getName().equalsIgnoreCase("Fries")))
-			{	
-			 discount = discount+item.getAddOns().getCost() * 0.2 * item.getCount();
+				if(orderItem.getItem()!=null && orderItem.getItem() instanceof AddOns) {
+					AddOns addons=(AddOns) orderItem.getItem();
+					if(addons.getName().equalsIgnoreCase("Fries")) {	
+			 discount = discount+addons.getCost() * 0.2 * orderItem.getCount();
+			}
 			}
 			}
 			return discount;

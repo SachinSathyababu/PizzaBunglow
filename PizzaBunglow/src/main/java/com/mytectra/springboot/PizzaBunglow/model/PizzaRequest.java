@@ -23,7 +23,7 @@ public class PizzaRequest {
 	@NotEmpty(message = "Pizza Name Cannot be empty or null")	
 	@NotBlank(message ="Pizza Name Cannot be white spaces")
 	//@Size
-	@ValidPizza(message = "Its invalid pizza")
+	//@ValidPizza(message = "Its invalid pizza")
 	private String pizzaName;
 	
 	@Positive(message = "cannot be negative number")

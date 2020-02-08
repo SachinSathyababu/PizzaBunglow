@@ -59,11 +59,11 @@ public class PizzaControllerTest {
 		pizzaList.add(pizza1);
 		Mockito.when(pizzaStore.getAllPizzas()).thenReturn(pizzaList);
 		
-		mvc.perform(MockMvcRequestBuilders.get(URI.create("/pizzas")))
+		mvc.perform(MockMvcRequestBuilders.get(URI.create("/pizzas")).header("Page", 0))
 		.andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
 		.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
-		.andExpect(MockMvcResultMatchers.jsonPath("$[0].pizza_id").value(1))
-		.andExpect(MockMvcResultMatchers.jsonPath("$[1].pizza_id").value(2));
+		.andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(1))
+		.andExpect(MockMvcResultMatchers.jsonPath("$[1].id").value(2));
 
 		
 	}
@@ -90,10 +90,10 @@ public class PizzaControllerTest {
 		pizzaList.add(pizza1);
 		Mockito.when(pizzaStore.getAllPizzas()).thenReturn(pizzaList);
 		
-		mvc.perform(MockMvcRequestBuilders.get(URI.create("/pizzas")).accept(MediaType.APPLICATION_XML_VALUE))
+		mvc.perform(MockMvcRequestBuilders.get(URI.create("/pizzas")).accept(MediaType.APPLICATION_XML_VALUE).header("Page", 0))
 		.andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
 		.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_XML_VALUE))
-		.andExpect(MockMvcResultMatchers.xpath("/List/item[1]/pizza_id").string("1"));
+		.andExpect(MockMvcResultMatchers.xpath("/List/item[1]/id").string("1"));
 
 		
 	}
@@ -114,7 +114,7 @@ public class PizzaControllerTest {
 		mvc.perform(MockMvcRequestBuilders.get(URI.create("/pizzas/search")).param("name", pizza.getName()))
 		.andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
 		.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
-		.andExpect(MockMvcResultMatchers.jsonPath("$.pizza_id").value(pizza.getId()));
+		.andExpect(MockMvcResultMatchers.jsonPath("$.id").value(pizza.getId()));
 
 		
 	}
@@ -134,7 +134,7 @@ public class PizzaControllerTest {
 		mvc.perform(MockMvcRequestBuilders.get(URI.create("/pizzas/search")).param("name", pizza.getName()).accept(MediaType.APPLICATION_XML_VALUE))
 		.andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
 		.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_XML_VALUE))
-		.andExpect(MockMvcResultMatchers.xpath("/pizza/pizza_id").string("1"));
+		.andExpect(MockMvcResultMatchers.xpath("/pizza/id").string("1"));
 
 		
 	}
@@ -144,7 +144,7 @@ public class PizzaControllerTest {
 		
 		
 		String jsonPizza = "{"
-				 + "\"pizza_id\"  : 1,"
+				 + "\"id\"  : 1,"
 				+ " \"name\": \"Panner Pizza Hot\","
 				+ "\"description\": \"topped with panner spicy\","
 				+ " \"cost\": 300"
@@ -165,7 +165,7 @@ public class PizzaControllerTest {
 	public void testGetPizzasInsertXml() throws Exception {
 		
 		
-		String xmlPizza = "<pizza><name>Panner Pizza</name><description>topped with panner</description><cost>300</cost><pizza_id>1</pizza_id></pizza>";
+		String xmlPizza = "<pizza><name>Panner Pizza</name><description>topped with panner</description><cost>300</cost><id>1</id></pizza>";
 
 		
 		mvc.perform(MockMvcRequestBuilders.post(URI.create("/pizzas")).content(xmlPizza).contentType(MediaType.APPLICATION_XML_VALUE).accept(MediaType.APPLICATION_XML_VALUE))
@@ -186,14 +186,14 @@ public class PizzaControllerTest {
 		
 		String jsonPizza = "[" 
 				+  "{"
-				+ "\"pizza_id\"  : 1,"
+				+ "\"id\"  : 1,"
 				+ " \"name\": \"Panner Pizza Hot\","
 				+ "\"description\": \"topped with panner spicy\","
 				+ " \"cost\": 300"
 				+ "}"
 				+ "," 
 				+  "{"
-			    + "\"pizza_id\"  : 2,"
+			    + "\"id\"  : 2,"
 				+ " \"name\": \"Chicken Pizza Hot\","
 				+ "\"description\": \"topped with chicken spicy\","
 				+ " \"cost\": 400"
@@ -217,8 +217,8 @@ public class PizzaControllerTest {
 	public void testListPizzasInsertXml() throws Exception {
 		
 		
-		String xmlPizzaList = "<List><item><name>Panner Pizza</name><description>topped with panner</description><cost>300</cost><pizza_id>1</pizza_id></item>"
-				+"<item><name>Chicken Pizza</name><description>topped with chicken</description><cost>450</cost><pizza_id>2</pizza_id></item></List>";
+		String xmlPizzaList = "<List><item><name>Panner Pizza</name><description>topped with panner</description><cost>300</cost><id>1</id></item>"
+				+"<item><name>Chicken Pizza</name><description>topped with chicken</description><cost>450</cost><id>2</id></item></List>";
 	
 		mvc.perform(MockMvcRequestBuilders.post(URI.create("/pizzas")).content(xmlPizzaList).contentType(MediaType.APPLICATION_XML_VALUE).header("List","123").accept(MediaType.APPLICATION_XML_VALUE))
 		.andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
@@ -245,7 +245,7 @@ public class PizzaControllerTest {
 		mvc.perform(MockMvcRequestBuilders.get(URI.create("/pizzas/1")))
 		.andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
 		.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
-		.andExpect(MockMvcResultMatchers.jsonPath("$.pizza_id").value(pizza.getId()));
+		.andExpect(MockMvcResultMatchers.jsonPath("$.id").value(pizza.getId()));
 
 		
 	}
@@ -265,7 +265,7 @@ public class PizzaControllerTest {
 		mvc.perform(MockMvcRequestBuilders.get(URI.create("/pizzas/1")).accept(MediaType.APPLICATION_XML_VALUE))
 		.andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
 		.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_XML_VALUE))
-		.andExpect(MockMvcResultMatchers.xpath("/pizza/pizza_id").string("1"));
+		.andExpect(MockMvcResultMatchers.xpath("/pizza/id").string("1"));
 
 		
 	}
@@ -274,7 +274,7 @@ public class PizzaControllerTest {
 	public void testUpdatePizzaById() throws Exception {
 		
 		String jsonPizza = "{"
-				+ "\"pizza_id\"  : 1,"
+				+ "\"id\"  : 1,"
 				+ " \"name\": \"Pan Pizza Hot\","
 				+ "\"description\": \"topped with pan spicy\","
 				+ " \"cost\": 300"
@@ -298,7 +298,7 @@ public class PizzaControllerTest {
 	@Test
 	public void testUpdatePizzaByIdXml() throws Exception {
 		
-		String xmlPizza = "<pizza><name>Panner Pizza</name><description>topped with panner</description><cost>300</cost><pizza_id>1</pizza_id></pizza>";
+		String xmlPizza = "<pizza><name>Panner Pizza</name><description>topped with panner</description><cost>300</cost><id>1</id></pizza>";
 		
 		Pizza pizza= new Pizza();
 		pizza.setId(1);

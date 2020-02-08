@@ -1,45 +1,66 @@
 package com.mytectra.springboot.PizzaBunglow.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Positive;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+@Entity
 public class OrderItem {
 	
+	@Id
+	@Column(name="Id")
+	@GeneratedValue
+	private int id;
 	
-	@NotEmpty(message = "Pizza Requests Cannot be empty or null")	
-	@NotBlank(message ="Pizza Requests Cannot be white spaces")
-	private Pizza pizza;
+	@OneToOne
+	private Item item;
 	 
 	@Positive(message = "OrderItem count cannot be negative number")
+	@Column(name="item_count")
 	private int count;
-
-	@NotEmpty(message = "AddOns Name Cannot be empty or null")	
-	@NotBlank(message ="Addons Name Cannot be white spaces")
-	private AddOns addOns;
+	
+	@ManyToOne
+	@JsonIgnore
+	private PizzaOrder order;
 	
 	public OrderItem() {
 	}
 	
-	public OrderItem(AddOns addOns,int count) {
+	
+	public OrderItem(Item item, @Positive(message = "OrderItem count cannot be negative number") int count) {
 		super();
-		this.count = count;
-		this.addOns = addOns;
-	}
-
-	public OrderItem(Pizza pizza, int count) {
-		super();
-		this.pizza = pizza;
+		this.item = item;
 		this.count = count;
 	}
 
-	public Pizza getPizza() {
-		return pizza;
+
+	public int getId() {
+		return id;
 	}
 
-	public void setPizza(Pizza pizza) {
-		this.pizza = pizza;
+
+	public void setId(int id) {
+		this.id = id;
 	}
+
+
+	public Item getItem() {
+		return item;
+	}
+
+
+	public void setItem(Item item) {
+		this.item = item;
+	}
+
 
 	public int getCount() {
 		return count;
@@ -49,13 +70,17 @@ public class OrderItem {
 		this.count = count;
 	}
 
-	public AddOns getAddOns() {
-		return addOns;
+
+	public PizzaOrder getOrder() {
+		return order;
 	}
 
-	public void setAddOns(AddOns addOns) {
-		this.addOns = addOns;
+
+	public void setOrder(PizzaOrder order) {
+		this.order = order;
 	}
+
+	
 	
 	
 

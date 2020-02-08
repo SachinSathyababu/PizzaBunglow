@@ -44,7 +44,7 @@ public class Flat20DiscountTest  {
 		order.addOrder(item);
 		order.addOrder(item1);
 		double dis = discount.discount(order);
-		assertEquals(60, dis);
+		assertEquals(0, dis);
 	}
 	
 	@Test
@@ -62,7 +62,7 @@ public class Flat20DiscountTest  {
 		order.addOrder(item);
 		order.addOrder(item1);
 		double dis = discount.discount(order);
-		assertEquals(0, dis);
+		assertEquals(60, dis);
 	}
 
 	@Test

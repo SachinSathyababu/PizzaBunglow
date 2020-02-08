@@ -1,26 +1,17 @@
 package com.mytectra.springboot.PizzaBunglow;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
 import com.mytectra.springboot.PizzaBunglow.PizzaKitchen.PizzaKitchenService;
-import com.mytectra.springboot.PizzaBunglow.Store.AddOnStore;
 import com.mytectra.springboot.PizzaBunglow.Store.PizzaStore;
-import com.mytectra.springboot.PizzaBunglow.model.AddOns;
-import com.mytectra.springboot.PizzaBunglow.model.AddOnsRequest;
-import com.mytectra.springboot.PizzaBunglow.model.OrderItem;
-import com.mytectra.springboot.PizzaBunglow.model.Pizza;
-import com.mytectra.springboot.PizzaBunglow.model.PizzaOrder;
-import com.mytectra.springboot.PizzaBunglow.model.PizzaRequest;
-import com.mytectra.springboot.PizzaBunglow.model.PizzaRequest.Base;
-import com.mytectra.springboot.PizzaBunglow.model.PizzaRequest.Size;
-import com.mytectra.springboot.PizzaBunglow.model.PizzaRequests;
 
 @SpringBootApplication
+@EntityScan(basePackages = "com.mytectra.springboot.PizzaBunglow.model")
+@EnableAspectJAutoProxy
 public class PizzaBunglowApplication {
 
 	public static void main(String[] args) {

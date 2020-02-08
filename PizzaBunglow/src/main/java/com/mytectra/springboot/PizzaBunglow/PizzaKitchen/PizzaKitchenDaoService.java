@@ -5,11 +5,13 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 import com.mytectra.springboot.PizzaBunglow.Baker.Baker;
 import com.mytectra.springboot.PizzaBunglow.Baker.PizzaBakeException;
 import com.mytectra.springboot.PizzaBunglow.Billing.Billing;
+import com.mytectra.springboot.PizzaBunglow.Dao.OrderDao;
 import com.mytectra.springboot.PizzaBunglow.Store.AddOnsNotFoundException;
 import com.mytectra.springboot.PizzaBunglow.Store.PizzaNotFoundException;
 import com.mytectra.springboot.PizzaBunglow.model.AddOnsRequest;
@@ -18,9 +20,13 @@ import com.mytectra.springboot.PizzaBunglow.model.PizzaOrder;
 import com.mytectra.springboot.PizzaBunglow.model.PizzaRequests;
 
 @Component
-public class PizzaKitchenService implements PizzaKitchen{
+@Primary
+public class PizzaKitchenDaoService implements PizzaKitchen{
 	
 	private List<PizzaOrder> orders= new ArrayList<>();
+	
+	@Autowired
+	private OrderDao orderDao;
 
 	@Autowired
 	private Baker bakerService;
@@ -29,49 +35,32 @@ public class PizzaKitchenService implements PizzaKitchen{
 	private Billing billingService;
 	
 	@Override
-	public PizzaOrder AddOrder(PizzaRequests pizzaRequests, List<AddOnsRequest> addOnsList, String phoneNumber, Date orderDate) throws PizzaNotFoundException, AddOnsNotFoundException 	 
+	public PizzaOrder AddOrder(PizzaRequests pizzaRequests, List<AddOnsRequest> addOnsList, String phoneNumber, Date orderDate) throws PizzaNotFoundException, AddOnsNotFoundException, PizzaBakeException 	 
 	{
 		PizzaOrder order= new PizzaOrder();
-		try {
+		
 			order = bakerService.bake(pizzaRequests, addOnsList);
 			billingService.bill(order);
 			order.setPhoneNumber(phoneNumber);
 			order.setOrderDate(orderDate);
 			orders.add(order);
-		} catch (PizzaBakeException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
-		}
 		
+		orderDao.save(order);
 		return order;
 	}
 
 	public List<PizzaOrder> getAllOrders(){
-		return orders;
+		return orderDao.getAllOrders();
 	}
 	
 	public List<PizzaOrder> getOrderByPhoneNumber(String phone) {
 		
-		List<PizzaOrder> selectOrders= new ArrayList<>();
-		
-		if(phone!=null && !phone.trim().isEmpty()) {
-			for(PizzaOrder order : orders) {
-				if(order.getPhoneNumber().equalsIgnoreCase(phone)) {
-					selectOrders.add(order);
-				}
-			}
-			}
-		return selectOrders;
+		return orderDao.getOrderByPhone(phone);
 	}
 	
 	public PizzaOrder getOrderById(int id) {
 		if(id>0) {
-			for(PizzaOrder order : orders) {
-				if(order.getOrderId()==id) {
-					return order;
-				}
-			}
+			return orderDao.getOrderById(id);
 		}
 		return null;
 	}
@@ -81,8 +70,8 @@ public class PizzaKitchenService implements PizzaKitchen{
 		if(order.getOrderId()>0) {
 			PizzaOrder order1= getOrderById(order.getOrderId());
 			if(order1!=null) {
-				orders.remove(order1);
-				orders.add(order);
+				order.setOrderId(order1.getOrderId());
+				orderDao.updateOrder(order);
 				return true;
 			}
 		}
@@ -94,10 +83,12 @@ public class PizzaKitchenService implements PizzaKitchen{
 		if(id>0) {
 			PizzaOrder order= getOrderById(id);
 			if(order!=null) {
-				orders.remove(order);
+				orderDao.deleteOrder(order);
 				return true;
 			}
 		}
 		return false;
 	}
+	
+	
 }
