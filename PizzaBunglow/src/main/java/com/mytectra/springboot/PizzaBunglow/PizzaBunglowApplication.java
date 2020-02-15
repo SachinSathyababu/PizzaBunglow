@@ -5,12 +5,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 
 import com.mytectra.springboot.PizzaBunglow.PizzaKitchen.PizzaKitchenService;
 import com.mytectra.springboot.PizzaBunglow.Store.PizzaStore;
 
 @SpringBootApplication
-@EntityScan(basePackages = "com.mytectra.springboot.PizzaBunglow.model")
+@EntityScan(basePackages = { "com.mytectra.springboot.PizzaBunglow.model","com.mytectra.springboot.PizzaBunglow.Security.Entity"})
 @EnableAspectJAutoProxy
 public class PizzaBunglowApplication {
 

@@ -44,7 +44,15 @@ public class TimingAspect {
 		return result;
 	}*/
 	
-	@Pointcut("execution(void com.mytectra.springboot.PizzaBunglow.Dao.AddOnsDao.saveAddOns(..))")
+	/*@Pointcut("execution(void com.mytectra.springboot.PizzaBunglow.Dao.AddOnsDao.saveAddOns(..))")
+	public void trimingAddonsNameAdonsDao() {
+	}*/
+	
+	/*@Pointcut("target(com.mytectra.springboot.PizzaBunglow.Dao.AddOnsDao)")
+	public void trimingAddonsNameAdonsDao() {
+	}*/
+	
+	@Pointcut("within(com.mytectra.springboot.PizzaBunglow.Dao.AddOnsDao)")
 	public void trimingAddonsNameAdonsDao() {
 	}
     
