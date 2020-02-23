@@ -47,7 +47,7 @@ public class PBUser implements UserDetails {
 	
 	public enum Roles implements GrantedAuthority {
 		
-		USER,ADMIN;
+		ROLE_USER,ROLE_ADMIN;
 
 		@Override
 		public String getAuthority() {

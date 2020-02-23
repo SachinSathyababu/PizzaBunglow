@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -21,7 +22,7 @@ import com.mytectra.springboot.PizzaBunglow.Store.AddOnStore;
 import com.mytectra.springboot.PizzaBunglow.model.AddOns;
 
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(controllers=AddOnsController.class)
+@WebMvcTest(controllers= {AddOnsController.class })
 public class AddOnsControllerTest {
 
 @Autowired
@@ -31,6 +32,7 @@ private MockMvc mvc;
 private AddOnStore addOnStore;
 
 		@Test
+		@WithMockUser(username = "jram" , authorities = {"ROLE_USER"})
 		public void getAddOnsTestJson() throws Exception {
 		
 			AddOns addOns1= new AddOns();

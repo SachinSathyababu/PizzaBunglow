@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.constraints.NotNull;
@@ -12,6 +13,8 @@ import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -42,6 +45,9 @@ public class AddOnsController {
 	@Autowired
 	private AddOnStore addOnsStore;
 	
+	@PreAuthorize(value = "hasRole('ROLE_USER')")
+	@Secured("ROLE_USER")
+	@RolesAllowed("ROLE_USER")
 	@GetMapping(path="/addOns", produces= {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
  	public @ResponseBody List<AddOns> getAddOns(){
 		return addOnsStore.getAllAddOns();
